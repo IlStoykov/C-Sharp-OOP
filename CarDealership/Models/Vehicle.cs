@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CarDealership.Models
 {
-    public class Vehicle : IVehicle
+    public abstract class Vehicle : IVehicle
     {
         private string model;
         private double price;
