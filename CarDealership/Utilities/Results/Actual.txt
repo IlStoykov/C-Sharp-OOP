@@ -1,0 +1,4 @@
+SaloonCar: MercedesBenzC220CDI is listed in the dealership. Price: 24200.00
+SaloonCar: BMW330i is listed in the dealership. Price: 30800.00
+SaloonCars is not a valid type.
+BMW330i already exists as an offer in the dealership.
