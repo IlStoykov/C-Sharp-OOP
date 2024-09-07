@@ -31,3 +31,46 @@ TransRush purchased a DihatsuFeroza.
 RenataAndrews is not eligible to purchase a Truck.
 RenataAndrews purchased a BentleyBentyaga.
 MartinTikker purchased a TeslaModel3.
+MartinTikker purchased a BMW330i.
+WillyBetz has no profile in the dealership.
+RenataAndrews purchased a AudiSQ8.
+RenataAndrews purchased a DihatsuFeroza.
+TransRush is not eligible to purchase a Truck.
+TransRush is not eligible to purchase a Truck.
+TransRush is not eligible to purchase a Truck.
+CargoGoat is not eligible to purchase a Truck.
+CargoGoat is not eligible to purchase a Truck.
+CargoGoat is not eligible to purchase a Truck.
+CargoGoat purchased a DihatsuFeroza.
+CargoGoat purchased a DihatsuFeroza.
+CargoGoat purchased a MercedesGL400d.
+WillyBetz created a profile in the dealership.
+Customer Report:
+CargoGoat - Purchases: 3
+-Models:
+--DihatsuFeroza
+--DihatsuFeroza
+--MercedesGL400d
+MartinTikker - Purchases: 3
+-Models:
+--BMW330i
+--Mazda6
+--TeslaModel3
+RenataAndrews - Purchases: 3
+-Models:
+--AudiSQ8
+--BentleyBentyaga
+--DihatsuFeroza
+TransRush - Purchases: 1
+-Models:
+--DihatsuFeroza
+WillyBetz - Purchases: 0
+-Models:
+--none
+--AudiSQ8 - Price: 122400.00, Total Model Sales: 1
+--BentleyBentyaga - Price: 146400.00, Total Model Sales: 1
+--BMWiX5M - Price: 75000.00, Total Model Sales: 0
+--DihatsuFeroza - Price: 6240.00, Total Model Sales: 4
+--MercedesGL400d - Price: 67440.00, Total Model Sales: 1
+--MitsubishiPajero - Price: 105720.00, Total Model Sales: 0
+-Total Purchases: 7
