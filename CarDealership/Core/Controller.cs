@@ -58,17 +58,35 @@ namespace CarDealership.Core
             dealership.Vehicles.Add(newVehicle);
             return string.Format(OutputMessages.VehicleAddedSuccessfully, vehicleTypeName, model, newVehicle.Price.ToString("F2"));
         }
+        public string PurchaseVehicle(string vehicleTypeName, string customerName, double budget)
+        {
+            if (!dealership.Customers.Exists(customerName)){
+                return string.Format(OutputMessages.CustomerNotFound, customerName);
+            }
+            if (!dealership.Vehicles.Models.Any(x=>x.GetType().Name == vehicleTypeName)) {
+                return string.Format(OutputMessages.VehicleTypeNotFound, vehicleTypeName);
+            }
+            //string customerType = dealership.Customers.Models.First(x=>x.Name == customerName).GetType().Name;
+            ICustomer customerFound = dealership.Customers.Get(customerName);
+            if (customerFound is LegalEntityCustomer && vehicleTypeName == "SaloonCar" || customerFound is IndividualClient && vehicleTypeName == "Truck") {
+                return string.Format(OutputMessages.CustomerNotEligibleToPurchaseVehicle, customerName, vehicleTypeName);
+            }
+            IVehicle vehicleFound = dealership.Vehicles.Models.Where(v=>v.GetType().Name == vehicleTypeName && v.Price <= budget)
+                .OrderByDescending(v=>v.Price).FirstOrDefault();
+            if (vehicleFound != null){
+
+                customerFound.BuyVehicle(vehicleFound.Model);
+                vehicleFound.SellVehicle(vehicleFound.Model);
+                return string.Format(OutputMessages.VehiclePurchasedSuccessfully, customerName, vehicleFound.Model);
+            }
+            return string.Format(OutputMessages.BudgetIsNotEnough, customerName, vehicleTypeName);
+        }
 
         public string CustomerReport()
         {
             throw new NotImplementedException();
-        }
-
-        public string PurchaseVehicle(string vehicleTypeName, string customerName, double budget)
-        {
-            throw new NotImplementedException();
-        }
-
+        }        
+        
         public string SalesReport(string vehicleTypeName)
         {
             throw new NotImplementedException();
