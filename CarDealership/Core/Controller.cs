@@ -1,7 +1,9 @@
 ﻿using CarDealership.Core.Contracts;
 using CarDealership.Models;
 using CarDealership.Models.Contracts;
+using CarDealership.Repositories.Contracts;
 using CarDealership.Utilities.Messages;
+using System.Text;
 
 
 namespace CarDealership.Core
@@ -74,7 +76,6 @@ namespace CarDealership.Core
             IVehicle vehicleFound = dealership.Vehicles.Models.Where(v=>v.GetType().Name == vehicleTypeName && v.Price <= budget)
                 .OrderByDescending(v=>v.Price).FirstOrDefault();
             if (vehicleFound != null){
-
                 customerFound.BuyVehicle(vehicleFound.Model);
                 vehicleFound.SellVehicle(vehicleFound.Model);
                 return string.Format(OutputMessages.VehiclePurchasedSuccessfully, customerName, vehicleFound.Model);
@@ -84,12 +85,42 @@ namespace CarDealership.Core
 
         public string CustomerReport()
         {
-            throw new NotImplementedException();
+            var customerOrderd = dealership.Customers.Models.OrderBy(n => n.Name);
+            StringBuilder report = new StringBuilder();
+            report.AppendLine("Customer Report:");
+
+            foreach (var customer in customerOrderd){
+                report.AppendLine(customer.ToString());
+                report.AppendLine("-Models:");
+
+                var models = customer.Purchases.OrderBy(p => p).ToList();
+                if (customer.Purchases.Count == 0) {
+                    report.AppendLine("--none");
+                    continue;
+                }
+                else {
+                    foreach (var model in models) { 
+                        report.AppendLine($"--{model}");
+                    }  
+                }
+            }
+            return report.ToString().Trim();
         }        
         
         public string SalesReport(string vehicleTypeName)
         {
-            throw new NotImplementedException();
+            var vehiclesOrdered = dealership.Vehicles.Models
+                .Where(x => x.GetType().Name == vehicleTypeName)
+                .OrderBy(x => x.Model);
+            StringBuilder report = new StringBuilder();
+            foreach (var vehicle in vehiclesOrdered)
+            {
+                report.AppendLine($"--{vehicle}");
+            }
+            var totalSales = vehiclesOrdered.Sum(v => v.SalesCount);
+            report.AppendLine($"-Total Purchases: {totalSales}");
+
+            return report.ToString().Trim();
         }
     }
 }
