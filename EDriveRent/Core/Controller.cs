@@ -23,7 +23,20 @@ namespace EDriveRent.Core
         }
         public string AllowRoute(string startPoint, string endPoint, double length)
         {
-            throw new NotImplementedException();
+            if (routes.Any(x => x.StartPoint == startPoint && x.EndPoint == endPoint && x.Length == length)) {
+                return string.Format(OutputMessages.RouteExisting, startPoint, endPoint, length);
+            }
+            if (routes.Any(x => x.StartPoint == startPoint && x.EndPoint == endPoint && x.Length < length)) {
+                return string.Format(OutputMessages.RouteIsTooLong, startPoint, endPoint);
+            }
+            int routeNum = routes.Count + 1;
+            IRoute newRoute = new Route(startPoint, endPoint, length, routeNum);
+            routes.Add(newRoute);
+            var mathingRoute = routes.FirstOrDefault(x => x.StartPoint == newRoute.StartPoint && x.EndPoint == newRoute.EndPoint && x.Length > newRoute.Length);
+            if (mathingRoute != null) { 
+                mathingRoute.LockRoute();
+            }
+            return string.Format(OutputMessages.NewRouteAdded, startPoint, endPoint, length);
         }
 
         public string MakeTrip(string drivingLicenseNumber, string licensePlateNumber, string routeId, bool isAccidentHappened)
