@@ -1,13 +1,11 @@
-﻿using EDriveRent.Core.Contracts;
+using EDriveRent.Core.Contracts;
 using EDriveRent.Models;
 using EDriveRent.Models.Contracts;
 using EDriveRent.Utilities.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace EDriveRent.Core
 {
@@ -16,6 +14,7 @@ namespace EDriveRent.Core
         private List<IUser> users;
         private List<IVehicle> vehicles;
         private List<IRoute> routes;
+        private string[] vehicleTypeList = new string[] { "PassengerCar", "CargoVan" };
 
         public Controller() {         
             users = new List<IUser>();
@@ -49,7 +48,22 @@ namespace EDriveRent.Core
 
         public string UploadVehicle(string vehicleType, string brand, string model, string licensePlateNumber)
         {
-            throw new NotImplementedException();
+            IVehicle newVehicle = null;
+             
+            if (!vehicleTypeList.Contains(vehicleType)) {
+                return string.Format(OutputMessages.VehicleTypeNotAccessible, vehicleType);
+            }
+            if (vehicles.Any(x => x.LicensePlateNumber == licensePlateNumber)) {
+                return string.Format(OutputMessages.LicensePlateExists, licensePlateNumber);
+            }
+            if (vehicleType == "PassengerCar") {
+                newVehicle = new PassengerCar(brand, model, licensePlateNumber);
+            }
+            if (vehicleType == "CargoVan"){
+                newVehicle = new CargoVan(brand, model, licensePlateNumber);
+            }
+            vehicles.Add(newVehicle);
+            return string.Format(OutputMessages.VehicleAddedSuccessfully, brand, model, licensePlateNumber);
         }
 
         public string UsersReport()
