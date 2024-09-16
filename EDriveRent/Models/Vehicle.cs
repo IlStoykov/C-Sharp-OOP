@@ -1,4 +1,4 @@
-﻿using EDriveRent.Models.Contracts;
+using EDriveRent.Models.Contracts;
 using EDriveRent.Utilities.Messages;
 using System;
 
@@ -48,6 +48,7 @@ namespace EDriveRent.Models
                 if (string.IsNullOrWhiteSpace(value)) {
                     throw new ArgumentException(ExceptionMessages.LicenceNumberRequired);
                 }
+                licensePlateNumber = value;
             }
         }
         public int BatteryLevel { get; private set; }
@@ -60,12 +61,14 @@ namespace EDriveRent.Models
         }
         public void Drive(double mileage)
         {
-            int batteryUse = (int)mileage / BatteryLevel;
+            int batteryReduction = (int)Math.Round((mileage / MaxMileage) * 100);
             if (GetType().Name == "CargoVan") {
-                batteryUse += 5;
+                batteryReduction += 5;
             }
-            BatteryLevel -= batteryUse;
-            if (BatteryLevel < 0){
+
+            BatteryLevel -= batteryReduction;
+
+            if (BatteryLevel < 0) {
                 BatteryLevel = 0;
             }
         }
@@ -74,7 +77,5 @@ namespace EDriveRent.Models
             BatteryLevel = 100;
         }
         public override string ToString() => $"{Brand} {Model} License plate: {LicensePlateNumber} Battery: {BatteryLevel}% Status: {(IsDamaged ? "damaged":"OK")}";
-
-
     }
 }
