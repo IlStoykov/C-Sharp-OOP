@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace EDriveRent.Core
 {
     public class Controller : IController
@@ -41,7 +40,24 @@ namespace EDriveRent.Core
 
         public string MakeTrip(string drivingLicenseNumber, string licensePlateNumber, string routeId, bool isAccidentHappened)
         {
-            throw new NotImplementedException();
+            var userFound = users.Find(x => x.DrivingLicenseNumber == drivingLicenseNumber);
+            var vehicleFound = vehicles.Find(x => x.LicensePlateNumber == licensePlateNumber);
+            var routeFound = routes.Find(x => x.RouteId == int.Parse(routeId));
+
+            if (userFound != null && userFound.IsBlocked == true) {
+                return string.Format(OutputMessages.UserBlocked, drivingLicenseNumber);
+            }
+            if (vehicleFound.IsDamaged == true) {
+                return string.Format(OutputMessages.VehicleDamaged, licensePlateNumber);
+            }
+            vehicleFound.Drive(routeFound.Length);
+            if (isAccidentHappened == true) {
+                vehicleFound.ChangeStatus();
+                userFound.DecreaseRating();
+            }
+            userFound.IncreaseRating();
+            return $"{vehicleFound.Brand} {vehicleFound.Model} License plate: {vehicleFound.LicensePlateNumber} " +
+                $"Battery: {vehicleFound.BatteryLevel}% Status: {(vehicleFound.IsDamaged ? "damaged" : "OK")}";
         }
 
         public string RegisterUser(string firstName, string lastName, string drivingLicenseNumber)
@@ -56,7 +72,12 @@ namespace EDriveRent.Core
 
         public string RepairVehicles(int count)
         {
-            throw new NotImplementedException();
+            var selectedVehicles = vehicles.Where(x => x.IsDamaged == false).OrderBy(x => x.Brand).ThenBy(x => x.Model).Take(count).ToList();
+            foreach (var vehicle in selectedVehicles) { 
+                vehicle.ChangeStatus();
+                vehicle.Recharge();
+            }
+            return $"{selectedVehicles.Count} vehicles are successfully repaired!"         
         }
 
         public string UploadVehicle(string vehicleType, string brand, string model, string licensePlateNumber)
