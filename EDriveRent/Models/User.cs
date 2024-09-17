@@ -1,4 +1,4 @@
-﻿using EDriveRent.Models.Contracts;
+using EDriveRent.Models.Contracts;
 using EDriveRent.Utilities.Messages;
 using System;
 using System.Threading;
@@ -29,7 +29,6 @@ namespace EDriveRent.Models
                 firstName = value;
             }
         }
-
         public string LastName { 
             get => lastName;
             private set {
@@ -39,17 +38,21 @@ namespace EDriveRent.Models
                 lastName = value;
             }
         }
-
         public double Rating {
-            get; private set;
+            get => rating;
+            private set {
+                if (value > 10) { rating = 10; }
+                else if(value < 0) { rating = 0; }
+                else { rating = value; }
+            }
         }
-
         public string DrivingLicenseNumber { 
             get => drivingLicenseNumber;
             private set {
                 if (string.IsNullOrWhiteSpace(value)){
                     throw new ArgumentException(ExceptionMessages.LicenceNumberRequired);
                 }
+                drivingLicenseNumber = value;
             }
         }
         public bool IsBlocked { 
@@ -57,20 +60,19 @@ namespace EDriveRent.Models
         }
         public void DecreaseRating()
         {
-            rating -= 2;
-            if (rating > 10) { 
-                rating = 10;
+            rating -= 2.0;
+            if (rating < 0.0) { 
+                rating = 0.0;
+                IsBlocked = true;
             }
         }
         public void IncreaseRating()
         {
             rating += .5;
-            if (rating < 0) {
-                rating = 0;
+            if (rating > 10.0) {
+                rating = 10.0;
             }
         }
-        public override string ToString() => $"{FirstName} {LastName} Driving license: {DrivingLicenseNumber} Rating: {Rating}";
-
-
+        public override string ToString() => $"{FirstName} {LastName} Driving license: {DrivingLicenseNumber} Rating: {Rating:F2}";
     }
 }
