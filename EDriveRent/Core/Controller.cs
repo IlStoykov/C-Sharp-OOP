@@ -5,6 +5,8 @@ using EDriveRent.Utilities.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+
 
 namespace EDriveRent.Core
 {
@@ -44,18 +46,22 @@ namespace EDriveRent.Core
             var vehicleFound = vehicles.Find(x => x.LicensePlateNumber == licensePlateNumber);
             var routeFound = routes.Find(x => x.RouteId == int.Parse(routeId));
 
-            if (userFound != null && userFound.IsBlocked == true) {
+            if (userFound.IsBlocked) {
                 return string.Format(OutputMessages.UserBlocked, drivingLicenseNumber);
             }
-            if (vehicleFound.IsDamaged == true) {
+            if (vehicleFound.IsDamaged) {
                 return string.Format(OutputMessages.VehicleDamaged, licensePlateNumber);
             }
             vehicleFound.Drive(routeFound.Length);
-            if (isAccidentHappened == true) {
+            if (isAccidentHappened)
+            {
                 vehicleFound.ChangeStatus();
                 userFound.DecreaseRating();
             }
-            userFound.IncreaseRating();
+            else {
+                userFound.IncreaseRating();
+            }
+            
             return $"{vehicleFound.Brand} {vehicleFound.Model} License plate: {vehicleFound.LicensePlateNumber} " +
                 $"Battery: {vehicleFound.BatteryLevel}% Status: {(vehicleFound.IsDamaged ? "damaged" : "OK")}";
         }
@@ -77,7 +83,8 @@ namespace EDriveRent.Core
                 vehicle.ChangeStatus();
                 vehicle.Recharge();
             }
-            return $"{selectedVehicles.Count} vehicles are successfully repaired!"         
+            return $"{selectedVehicles.Count} vehicles are successfully repaired!";          
+
         }
 
         public string UploadVehicle(string vehicleType, string brand, string model, string licensePlateNumber)
@@ -102,7 +109,13 @@ namespace EDriveRent.Core
 
         public string UsersReport()
         {
-            throw new NotImplementedException();
+            var arrangedUsers = users.OrderByDescending(x => x.Rating).ThenBy(x =>x.LastName).ThenBy(x =>x.FirstName);
+            StringBuilder result = new StringBuilder();
+            result.AppendLine("*** E-Drive-Rent ***");
+            foreach (var user in arrangedUsers) {
+                result.AppendLine(user.ToString());
+            }
+            return result.ToString().Trim();
         }
     }
 }
