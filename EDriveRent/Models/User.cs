@@ -1,7 +1,7 @@
 using EDriveRent.Models.Contracts;
 using EDriveRent.Utilities.Messages;
 using System;
-using System.Threading;
+
 
 
 namespace EDriveRent.Models
@@ -12,7 +12,7 @@ namespace EDriveRent.Models
         private string lastName;
         private double rating;
         private string drivingLicenseNumber;
-        private bool isBlock;
+        
 
         public User(string firstName, string lastName, string drivingLicenseNumber) {
             FirstName = firstName;
@@ -34,7 +34,7 @@ namespace EDriveRent.Models
             get => lastName;
             private set {
                 if (string.IsNullOrWhiteSpace(value)) { 
-                    throw new AbandonedMutexException(ExceptionMessages.LastNameNull);
+                    throw new ArgumentException(ExceptionMessages.LastNameNull);
                 }
                 lastName = value;
             }
@@ -42,9 +42,7 @@ namespace EDriveRent.Models
         public double Rating {
             get => rating;
             private set {
-                if (value > 10) { rating = 10; }
-                else if(value < 0) { rating = 0; }
-                else { rating = value; }
+                rating = value > 10 ? 10 : value < 0 ? 0: value;
             }
         }
         public string DrivingLicenseNumber { 
@@ -56,9 +54,8 @@ namespace EDriveRent.Models
                 drivingLicenseNumber = value;
             }
         }
-        public bool IsBlocked { 
-            get => isBlock; private set => isBlock = value;
-        }
+        public bool IsBlocked { get; private set; }        
+        
         public void DecreaseRating()
         {
             Rating -= 2.0;
@@ -74,7 +71,6 @@ namespace EDriveRent.Models
                 Rating = 10.0;
             }
         }
-        public override string ToString() => $"{FirstName} {LastName} Driving license: {DrivingLicenseNumber} Rating: {Rating:F2}";
-
+        public override string ToString() => $"{FirstName} {LastName} Driving license: {DrivingLicenseNumber} Rating: {Rating}";
     }
 }
