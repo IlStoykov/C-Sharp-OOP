@@ -12,6 +12,7 @@ namespace EDriveRent.Models
         private string lastName;
         private double rating;
         private string drivingLicenseNumber;
+        private bool isBlock;
 
         public User(string firstName, string lastName, string drivingLicenseNumber) {
             FirstName = firstName;
@@ -56,23 +57,24 @@ namespace EDriveRent.Models
             }
         }
         public bool IsBlocked { 
-            get; private set;
+            get => isBlock; private set => isBlock = value;
         }
         public void DecreaseRating()
         {
-            rating -= 2.0;
-            if (rating < 0.0) { 
-                rating = 0.0;
+            Rating -= 2.0;
+            if (Rating < 0.0) { 
+                Rating = 0.0;
                 IsBlocked = true;
             }
         }
         public void IncreaseRating()
         {
-            rating += .5;
-            if (rating > 10.0) {
-                rating = 10.0;
+            Rating += .5;
+            if (Rating > 10.0) {
+                Rating = 10.0;
             }
         }
         public override string ToString() => $"{FirstName} {LastName} Driving license: {DrivingLicenseNumber} Rating: {Rating:F2}";
+
     }
 }
