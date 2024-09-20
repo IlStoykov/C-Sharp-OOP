@@ -11,6 +11,7 @@ namespace VehicleGarage.Tests
         public void Setup()
         {
         }
+
         [Test]
         public void Constructor_ShouldInitializeCapacityAndVehicleCorrectly() {
             int capacity = 10;
@@ -85,9 +86,35 @@ namespace VehicleGarage.Tests
 
             Garage garage = new Garage(1);
             Vehicle vehicle1 = new Vehicle("Tesla", "Model S", "ABC123");
+                        
             int result = vehicle1.BatteryLevel;
             
             Assert.AreEqual(expectedBatteryLevel, result);
+        }
+        [Test]
+        public void DriveVehicle_ShouldNotChangeBatteryLevelIfIsTooHigh() {
+            int expectedBatteryLevel = 100;
+            Garage garage = new Garage(2);
+            Vehicle testVehicle = new Vehicle("Tesla", "Model S", "ABC123");
+            garage.AddVehicle(testVehicle);
+            garage.DriveVehicle("ABC123", 150, false);
+
+            Assert.AreEqual(expectedBatteryLevel, testVehicle.BatteryLevel);
+        }
+        [Test]
+        public void DriveVehicle_ShouldNotChangeBatteryLevelIfBatteryLavelIsTooLow() {
+            int expectedBatteryLevel = 25;
+            Garage garage = new Garage(2);
+            Vehicle testVehicle = new Vehicle("Tesla", "Model S", "ABC123");
+            testVehicle.BatteryLevel = expectedBatteryLevel;
+            garage.AddVehicle(testVehicle);
+            garage.DriveVehicle("ABC123", 150, false);
+
+            Assert.AreEqual(expectedBatteryLevel, testVehicle.BatteryLevel);
+        }
+        [Test]
+        public void DriveVehicle_ShouldChangeBatteryLevelCorrectly() { 
+        
         }
     }
 }
