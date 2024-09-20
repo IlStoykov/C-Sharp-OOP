@@ -68,5 +68,41 @@ namespace VehicleGarage.Tests
             bool result = car.IsDamaged;
             Assert.IsTrue(result);
         }
+        [Test]
+        public void Test_DriveVehicleIfAlreadydamaged() {
+            int expectResult = 60;
+            Garage garage = new Garage(3);
+            Vehicle car = new("Toyota", "Corolla", "CA6306AM");
+            garage.AddVehicle(car);
+
+            garage.DriveVehicle("CA6306AM", 40, true);
+            garage.DriveVehicle("CA6306AM", 40, true);
+
+            Assert.AreEqual(expectResult, car.BatteryLevel);
+
+        }
+        [Test]
+        public void Test_DriveVehicle_SetBatteryLevelCorrectly() {
+            int expectResult = 100;
+            Garage garage = new Garage(3);
+            Vehicle car = new("Toyota", "Corolla", "CA6306AM");
+            garage.AddVehicle(car);
+
+            garage.DriveVehicle("CA6306AM", 150, false);
+
+            Assert.AreEqual(expectResult, car.BatteryLevel);
+        }
+        [Test]
+        public void Test_DriveVehicle_ChargedBatteryCorrectly() {
+            int expectResult = 30;
+            Garage garage = new Garage(3);
+            Vehicle car = new("Toyota", "Corolla", "CA6306AM");
+            garage.AddVehicle(car);
+
+            garage.DriveVehicle("CA6306AM", 70, false);
+            garage.DriveVehicle("CA6306AM", 50, false);
+
+            Assert.AreEqual(expectResult, car.BatteryLevel);
+        }
     }
 }
