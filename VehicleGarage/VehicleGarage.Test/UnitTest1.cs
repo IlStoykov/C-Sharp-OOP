@@ -106,6 +106,7 @@ namespace VehicleGarage.Tests
             int expectedBatteryLevel = 25;
             Garage garage = new Garage(2);
             Vehicle testVehicle = new Vehicle("Tesla", "Model S", "ABC123");
+
             testVehicle.BatteryLevel = expectedBatteryLevel;
             garage.AddVehicle(testVehicle);
             garage.DriveVehicle("ABC123", 150, false);
@@ -113,8 +114,25 @@ namespace VehicleGarage.Tests
             Assert.AreEqual(expectedBatteryLevel, testVehicle.BatteryLevel);
         }
         [Test]
-        public void DriveVehicle_ShouldChangeBatteryLevelCorrectly() { 
-        
+        public void DriveVehicle_ShouldChangeBatteryLevelCorrectly() {
+            int expectedBatteryLevel = 50;
+            Garage garage = new Garage(2);
+            Vehicle testVehicle = new Vehicle("Tesla", "Model S", "ABC123");
+            
+            garage.AddVehicle(testVehicle);
+            garage.DriveVehicle("ABC123", 50, false);
+
+            Assert.AreEqual(expectedBatteryLevel, testVehicle.BatteryLevel);
+
+        }
+        [Test] 
+        public void DriveVehicle_ShouldChangeIsdamagedlCorrectly() {
+            Garage garage = new Garage(2);
+            Vehicle testVehicle = new Vehicle("Tesla", "Model S", "ABC123");
+            garage.AddVehicle(testVehicle);
+            garage.DriveVehicle("ABC123", 50, true);
+
+            Assert.IsTrue(testVehicle.IsDamaged);
         }
     }
 }
