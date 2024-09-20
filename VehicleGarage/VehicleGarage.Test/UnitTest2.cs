@@ -104,5 +104,26 @@ namespace VehicleGarage.Tests
 
             Assert.AreEqual(expectResult, car.BatteryLevel);
         }
+        [Test]
+        public void Test_ChargeVehicle() {
+            int expectResult = 2;
+            Garage garage = new Garage(3);
+            Vehicle car = new("Toyota", "Corolla", "CA6306AM");
+            Vehicle bus = new("Mercedes", "Vito", "CA8308AM");
+            Vehicle truck = new("FIAT", "TIR", "CA1111AM");
+
+            garage.AddVehicle(car);
+            garage.AddVehicle(bus);
+            garage.AddVehicle(truck);
+
+            garage.DriveVehicle("CA6306AM", 70, false);
+            garage.DriveVehicle("CA8308AM", 70, false);
+            garage.DriveVehicle("CA1111AM", 10, false);
+
+            int result = garage.ChargeVehicles(40);
+
+            Assert.AreEqual(expectResult, result);
+
+        }
     }
 }
