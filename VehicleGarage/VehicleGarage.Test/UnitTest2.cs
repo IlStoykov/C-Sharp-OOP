@@ -123,7 +123,26 @@ namespace VehicleGarage.Tests
             int result = garage.ChargeVehicles(40);
 
             Assert.AreEqual(expectResult, result);
+        }
+        [Test]
+        public void Test_GarageRepairVehicle() {
+            int expectResult = 2;
+            Garage garage = new Garage(3);
+            Vehicle car = new("Toyota", "Corolla", "CA6306AM");
+            Vehicle bus = new("Mercedes", "Vito", "CA8308AM");
+            Vehicle truck = new("FIAT", "TIR", "CA1111AM");
+            garage.AddVehicle(car);
+            garage.AddVehicle(bus);
+            garage.AddVehicle(truck);
 
+            garage.DriveVehicle("CA6306AM", 46, false);
+            garage.DriveVehicle("CA8308AM", 46, true);
+            garage.DriveVehicle("CA1111AM", 46, true);
+
+            string expectedResult = "Vehicles repaired: 2";
+            string result = garage.RepairVehicles();
+
+            Assert.AreEqual(expectedResult, result);
         }
     }
 }
