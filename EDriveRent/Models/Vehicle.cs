@@ -9,17 +9,19 @@ namespace EDriveRent.Models
     {
         private string brand;
         private string model;
+        private double maxMilage;
         private string licensePlateNumber;
+        private int batteryLevel;
+        private bool isDamaged;
 
-        public Vehicle(string brand, string model, string licensePlateNumber, double maxMileage) { 
+        public Vehicle(string brand, string model, double maxMileage, string licensePlateNumber) {
             Brand = brand;
             Model = model;
+            this.maxMilage = maxMilage;
             LicensePlateNumber = licensePlateNumber;
-            MaxMileage = maxMileage;
-            IsDamaged = false;
-            BatteryLevel = 100;
-        }    
-        
+            this.batteryLevel = 100;
+            this.isDamaged = false;
+        }            
 
         public string Brand {
             get => brand;
@@ -63,7 +65,7 @@ namespace EDriveRent.Models
         {
             int batteryReduction = (int)Math.Round((mileage / MaxMileage) * 100);
             if (GetType().Name == "CargoVan") {
-                batteryReduction += 5;
+                batteryReduction -= 5;
             }
 
             BatteryLevel -= batteryReduction;
@@ -77,5 +79,7 @@ namespace EDriveRent.Models
             BatteryLevel = 100;
         }
         public override string ToString() => $"{Brand} {Model} License plate: {LicensePlateNumber} Battery: {BatteryLevel}% Status: {(IsDamaged ? "damaged":"OK")}";
+
+
     }
 }
