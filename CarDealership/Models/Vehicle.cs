@@ -1,49 +1,85 @@
-﻿using CarDealership.Models.Contracts;
+using EDriveRent.Models.Contracts;
+using EDriveRent.Utilities.Messages;
+using System;
 
 
-namespace CarDealership.Models
+namespace EDriveRent.Models
 {
     public abstract class Vehicle : IVehicle
     {
+        private string brand;
         private string model;
-        private double price;
-        private List<string> buyers;
-        public Vehicle(string model, double price) { 
+        private double maxMilage;
+        private string licensePlateNumber;
+        private int batteryLevel;
+        private bool isDamaged;
+
+        public Vehicle(string brand, string model, string licensePlateNumber, double maxMileage) {
+            Brand = brand;
             Model = model;
-            Price = price;
-            buyers = new List<string>();
+            this.maxMilage = maxMilage;
+            LicensePlateNumber = licensePlateNumber;
+            this.batteryLevel = 100;
+            this.isDamaged = false;
+        }            
+
+        public string Brand {
+            get => brand;
+            private set {
+                if (string.IsNullOrWhiteSpace(value)) {
+                    throw new ArgumentNullException(ExceptionMessages.BrandNull);
+                }
+                brand = value;
+            }
         }
         public string Model {
             get => model;
-            set {
-                if (string.IsNullOrWhiteSpace(value)) { 
-                    throw new ArgumentNullException("Model is required.");
+            private set {
+                if (string.IsNullOrWhiteSpace(value)) {
+                    throw new ArgumentException(ExceptionMessages.ModelNull);
                 }
                 model = value;
             }
         }
-        public double Price { 
-            get => price;
-            set{
-                if (value <= 0) {
-                    throw new ArgumentOutOfRangeException("Price must be a positive number.");
+
+        public double MaxMileage { get; private set; }
+
+        public string LicensePlateNumber { 
+            get => licensePlateNumber;
+            private set{
+                if (string.IsNullOrWhiteSpace(value)) {
+                    throw new ArgumentException(ExceptionMessages.LicenceNumberRequired);
                 }
-                price = value;
+                licensePlateNumber = value;
             }
         }
-        public IReadOnlyCollection<string> Buyers => buyers.AsReadOnly();
+        public int BatteryLevel { get; private set; }
 
-        public int SalesCount => Buyers.Count;
+        public bool IsDamaged { get; private set; }
 
-        public void SellVehicle(string buyerName)
+        public void ChangeStatus()
         {
-            if (!string.IsNullOrEmpty(buyerName)) {
-                buyers.Add(buyerName); 
+           IsDamaged = !IsDamaged;
+        }
+        public void Drive(double mileage)
+        {
+            int batteryReduction = (int)Math.Round((mileage / MaxMileage) * 100);
+            if (GetType().Name == "CargoVan") {
+                batteryReduction -= 5;
+            }
+
+            BatteryLevel -= batteryReduction;
+
+            if (BatteryLevel < 0) {
+                BatteryLevel = 0;
             }
         }
-        public override string ToString()
+        public void Recharge()
         {
-            return $"{Model} - Price: {Price:F2}, Total Model Sales: {SalesCount}";
+            BatteryLevel = 100;
         }
+        public override string ToString() => $"{Brand} {Model} License plate: {LicensePlateNumber} Battery: {BatteryLevel}% Status: {(IsDamaged ? "damaged":"OK")}";
+
+
     }
 }
