@@ -2,15 +2,12 @@ using EDriveRent.Models.Contracts;
 using EDriveRent.Utilities.Messages;
 using System;
 
-
-
 namespace EDriveRent.Models
 {
     public class User : IUser
     {
         private string firstName;
-        private string lastName;
-        private double rating;
+        private string lastName;       
         private string drivingLicenseNumber;
         
 
@@ -40,9 +37,9 @@ namespace EDriveRent.Models
             }
         }
         public double Rating {
-            get => rating;
+            get => Rating;
             private set {
-                rating = value > 10 ? 10 : value < 0 ? 0: value;
+                Rating = value > 10 ? 10 : value < 0 ? 0: value;
             }
         }
         public string DrivingLicenseNumber { 
