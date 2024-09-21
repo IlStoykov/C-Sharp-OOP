@@ -1,4 +1,4 @@
-﻿using EDriveRent.Models.Contracts;
+using EDriveRent.Models.Contracts;
 using EDriveRent.Utilities.Messages;
 using System;
 
