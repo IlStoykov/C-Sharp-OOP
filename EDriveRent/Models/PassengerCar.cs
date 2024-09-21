@@ -1,9 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace EDriveRent.Models
 {
     public class PassengerCar : Vehicle
@@ -11,7 +5,7 @@ namespace EDriveRent.Models
         private const double ConstMileage = 450; 
 
         public PassengerCar(string brand, string model, string licensePlateNumber)
-            : base(brand, model, licensePlateNumber, ConstMileage) 
+            : base(brand, model, ConstMileage, licensePlateNumber) 
         {
         }
     }
