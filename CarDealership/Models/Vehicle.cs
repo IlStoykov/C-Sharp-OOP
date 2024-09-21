@@ -14,7 +14,7 @@ namespace EDriveRent.Models
         private int batteryLevel;
         private bool isDamaged;
 
-        public Vehicle(string brand, string model, string licensePlateNumber, double maxMileage) {
+        public Vehicle(string brand, string model,  double maxMileage, string licensePlateNumber) {
             Brand = brand;
             Model = model;
             this.maxMilage = maxMilage;
