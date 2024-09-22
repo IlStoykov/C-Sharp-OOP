@@ -75,11 +75,11 @@ namespace EDriveRent.Core
 
         public string RegisterUser(string firstName, string lastName, string drivingLicenseNumber)
         {
-            var userFound = users.FirstOrDefault(x => x.DrivingLicenseNumber == drivingLicenseNumber);
+            var userFound = users.FindById(drivingLicenseNumber);
             if (userFound != null){
                 return string.Format(OutputMessages.UserWithSameLicenseAlreadyAdded, drivingLicenseNumber);
             }
-            users.Add(new User(firstName, lastName, drivingLicenseNumber));
+            users.AddModel(new User(firstName, lastName, drivingLicenseNumber));
             return string.Format(OutputMessages.UserSuccessfullyAdded, firstName, lastName, drivingLicenseNumber);
         }
 
@@ -96,22 +96,29 @@ namespace EDriveRent.Core
 
         public string UploadVehicle(string vehicleType, string brand, string model, string licensePlateNumber)
         {
+            IVehicle vehicleFound = vehicles.FindById(licensePlateNumber);
             IVehicle newVehicle = null;
-             
-            if (!vehicleTypeList.Contains(vehicleType)) {
+
+            if (!vehicleTypeList.Contains(vehicleType))
+            {
                 return string.Format(OutputMessages.VehicleTypeNotAccessible, vehicleType);
             }
-            if (vehicles.Any(x => x.LicensePlateNumber == licensePlateNumber)) {
-                return string.Format(OutputMessages.LicensePlateExists, licensePlateNumber);
-            }
-            if (vehicleType == "PassengerCar") {
-                newVehicle = new PassengerCar(brand, model, licensePlateNumber);
-            }
-            if (vehicleType == "CargoVan"){
-                newVehicle = new CargoVan(brand, model, licensePlateNumber);
-            }
-            vehicles.Add(newVehicle);
-            return string.Format(OutputMessages.VehicleAddedSuccessfully, brand, model, licensePlateNumber);
+            else {
+                if (vehicleFound != null)
+                {
+                    return string.Format(OutputMessages.LicensePlateExists, licensePlateNumber);
+                }
+                if (vehicleType == "PassengerCar")
+                {
+                    newVehicle = new PassengerCar(brand, model, licensePlateNumber);
+                }
+                if (vehicleType == "CargoVan")
+                {
+                    newVehicle = new CargoVan(brand, model, licensePlateNumber);
+                }
+                vehicles.AddModel(newVehicle);
+                return string.Format(OutputMessages.VehicleAddedSuccessfully, brand, model, licensePlateNumber);
+            }            
         }
 
         public string UsersReport()
