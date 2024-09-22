@@ -1,9 +1,10 @@
 using EDriveRent.Core.Contracts;
 using EDriveRent.Models;
 using EDriveRent.Models.Contracts;
+using EDriveRent.Repositories;
+using EDriveRent.Repositories.Contracts;
 using EDriveRent.Utilities.Messages;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -12,31 +13,37 @@ namespace EDriveRent.Core
 {
     public class Controller : IController
     {
-        private List<IUser> users;
-        private List<IVehicle> vehicles;
-        private List<IRoute> routes;
+        private IRepository<IUser> users;
+        private IRepository<IVehicle> vehicles;
+        private IRepository<IRoute> routes;
         private string[] vehicleTypeList = new string[] { "PassengerCar", "CargoVan" };
 
         public Controller() {         
-            users = new List<IUser>();
-            vehicles = new List<IVehicle>();
-            routes = new List<IRoute>();
+            users = new UserRepository();
+            vehicles = new VehicleRepository();
+            routes = new RouteRepository();
         }
         public string AllowRoute(string startPoint, string endPoint, double length)
         {
-            if (routes.Any(x => x.StartPoint == startPoint && x.EndPoint == endPoint && x.Length == length)) {
-                return string.Format(OutputMessages.RouteExisting, startPoint, endPoint, length);
+            int routeNum = routes.GetAll().Count() + 1;
+            IRoute routeFound = routes.GetAll().FirstOrDefault(x => x.StartPoint == startPoint && x.EndPoint == endPoint);
+
+            if (routeFound != null) {
+
+                if (routeFound.Length == length)
+                {
+                    return string.Format(OutputMessages.RouteExisting, startPoint, endPoint, length);
+                }
+                else if (routeFound.Length < length)
+                {
+                    return string.Format(OutputMessages.RouteIsTooLong, startPoint, endPoint);
+                }
+                else if (routeFound.Length > length) { 
+                    routeFound.LockRoute();                   
+                }
             }
-            if (routes.Any(x => x.StartPoint == startPoint && x.EndPoint == endPoint && x.Length < length)) {
-                return string.Format(OutputMessages.RouteIsTooLong, startPoint, endPoint);
-            }
-            int routeNum = routes.Count + 1;
             IRoute newRoute = new Route(startPoint, endPoint, length, routeNum);
-            routes.Add(newRoute);
-            var mathingRoute = routes.FirstOrDefault(x => x.StartPoint == newRoute.StartPoint && x.EndPoint == newRoute.EndPoint && x.Length > newRoute.Length);
-            if (mathingRoute != null) { 
-                mathingRoute.LockRoute();
-            }
+            routes.AddModel(newRoute);
             return string.Format(OutputMessages.NewRouteAdded, startPoint, endPoint, length);
         }
 
