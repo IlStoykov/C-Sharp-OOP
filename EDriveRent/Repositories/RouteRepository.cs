@@ -1,10 +1,8 @@
-﻿using EDriveRent.Models.Contracts;
+using EDriveRent.Models.Contracts;
 using EDriveRent.Repositories.Contracts;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace EDriveRent.Repositories
 {
@@ -20,6 +18,7 @@ namespace EDriveRent.Repositories
             if (routeFound != null){
                 routes.Remove(routeFound);
             }
+            routes.Add(model);
         }
         public IRoute FindById(string identifier)
         {
