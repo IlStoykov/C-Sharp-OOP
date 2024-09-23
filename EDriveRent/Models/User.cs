@@ -9,6 +9,7 @@ namespace EDriveRent.Models
         private string firstName;
         private string lastName;       
         private string drivingLicenseNumber;
+        private double rating;
         
 
         public User(string firstName, string lastName, string drivingLicenseNumber) {
@@ -37,9 +38,9 @@ namespace EDriveRent.Models
             }
         }
         public double Rating {
-            get => Rating;
+            get => rating;
             private set {
-                Rating = value > 10 ? 10 : value < 0 ? 0: value;
+                rating = value > 10 ? 10 : value < 0 ? 0: value;
             }
         }
         public string DrivingLicenseNumber { 
@@ -68,6 +69,7 @@ namespace EDriveRent.Models
                 Rating = 10.0;
             }
         }
-        public override string ToString() => $"{FirstName} {LastName} Driving license: {DrivingLicenseNumber} Rating: {Rating}";
+        public override string ToString() => $"{FirstName} {LastName} Driving license: {drivingLicenseNumber} Rating: {Rating}";
+
     }
 }
