@@ -19,7 +19,7 @@ namespace EDriveRent.Models
             Model = model;
             this.maxMilage = maxMilage;
             LicensePlateNumber = licensePlateNumber;
-            this.batteryLevel = 100;
+            batteryLevel = 100;
             this.isDamaged = false;
         }            
 
@@ -53,7 +53,15 @@ namespace EDriveRent.Models
                 licensePlateNumber = value;
             }
         }
-        public int BatteryLevel { get; private set; }
+        public int BatteryLevel
+        {
+            get => batteryLevel;
+            private set
+            {
+                value = batteryLevel;
+            }
+        }
+        
 
         public bool IsDamaged { get; private set; }
 
@@ -78,8 +86,7 @@ namespace EDriveRent.Models
         {
             BatteryLevel = 100;
         }
-        public override string ToString() => $"{Brand} {Model} License plate: {LicensePlateNumber} Battery: {BatteryLevel}% Status: {(IsDamaged ? "damaged":"OK")}";
-
-
+        public override string ToString() => $"{Brand} {Model} License plate: {LicensePlateNumber} Battery" +
+            $": {BatteryLevel}% Status: {(IsDamaged ? "damaged":"OK")}";
     }
 }
