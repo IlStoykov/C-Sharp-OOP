@@ -1,6 +1,7 @@
 using Handball.Models.Contracts;
 using Handball.Utilities.Messages;
 using System;
+using System.Text;
 
 
 namespace Handball.Models
@@ -10,6 +11,10 @@ namespace Handball.Models
         private string name;
         private double rating;
         private string team;
+        public Player(string name, double rating) { 
+            Name = name;
+            Rating = rating;
+        }
         public string Name { 
             get => name; private set {
                 if (string.IsNullOrWhiteSpace(value)){ 
@@ -44,6 +49,13 @@ namespace Handball.Models
         public void JoinTeam(string name)
         {
             Team = name;
+        }
+        public override string ToString()
+        {
+            StringBuilder result = new StringBuilder();
+            result.AppendLine($"{GetType().Name}: {Name}");
+            result.AppendLine($"--Rating: {Rating}");
+            return result.ToString().TrimEnd();
         }
     }
 }
