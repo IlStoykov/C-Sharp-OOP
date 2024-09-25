@@ -27,7 +27,7 @@ namespace Handball.Models
         public double Rating { 
             get => rating; 
             protected set { 
-                rating = value > 10 ? 10 : value < 0 ? 0 : rating;
+                rating = value > 10 ? 10 : value < 1 ? 1 : rating;
             }
         }
         public string Team { 
@@ -38,11 +38,11 @@ namespace Handball.Models
                 team = value;
             }
         }
-        public void DecreaseRating()
+        public virtual void DecreaseRating()
         {
             
         }
-        public void IncreaseRating()
+        public virtual void IncreaseRating()
         {
             
         }
