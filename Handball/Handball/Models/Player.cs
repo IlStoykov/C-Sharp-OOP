@@ -27,7 +27,7 @@ namespace Handball.Models
         public double Rating { 
             get => rating; 
             protected set { 
-                rating = value > 10 ? 10 : value < 1 ? 1 : rating;
+                rating = value > 10 ? 10 : value < 1 ? 1 : value;
             }
         }
         public string Team { 
