@@ -2,8 +2,8 @@ using Handball.Core.Contracts;
 using Handball.Models;
 using Handball.Models.Contracts;
 using Handball.Repositories;
-using Handball.Utilities.Messages;
-using System;
+using Handball.Utilities.Messages;using System;
+
 using System.Linq;
 
 
@@ -32,11 +32,11 @@ namespace Handball.Core
 
             if (playerFound == null)
             {
-                return string.Format(OutputMessages.PlayerNotExisting, playerName, nameof(players));
+                return string.Format(OutputMessages.PlayerNotExisting, playerName, players.GetType().Name);
             }
             else if (teamFound == null)
             {
-                return string.Format(OutputMessages.TeamNotExisting, teamName, nameof(teams));
+                return string.Format(OutputMessages.TeamNotExisting, teamName, teams.GetType().Name);
             }
             else if (playerFound.Team != null)
             {
@@ -50,7 +50,25 @@ namespace Handball.Core
 
         public string NewGame(string firstTeamName, string secondTeamName)
         {
-            throw new NotImplementedException();
+            ITeam firstTeam = teams.GetModel(firstTeamName);
+            ITeam secondTeam = teams.GetModel(secondTeamName);
+            ITeam winner = null;
+            ITeam loser = null;
+            if (firstTeam.OverallRating == secondTeam.OverallRating) {
+                return string.Format(OutputMessages.GameIsDraw, firstTeamName, secondTeamName);
+            }
+            if (firstTeam.OverallRating > secondTeam.OverallRating) { 
+                winner = firstTeam;
+                loser = secondTeam;
+            }
+            else
+            {
+                winner = secondTeam;
+                loser = firstTeam;
+            }
+            winner.Win();
+            loser.Lose();
+            return string.Format(OutputMessages.GameHasWinner, winner.Name, loser.Name);
         }
 
         public string NewPlayer(string typeName, string name)
@@ -91,6 +109,7 @@ namespace Handball.Core
                 return string.Format(OutputMessages.TeamSuccessfullyAdded, name, teams.GetType().Name);
             }            
         }
+
         public string PlayerStatistics(string teamName)
         {
             throw new NotImplementedException();
