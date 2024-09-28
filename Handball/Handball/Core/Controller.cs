@@ -2,8 +2,8 @@ using Handball.Core.Contracts;
 using Handball.Models;
 using Handball.Models.Contracts;
 using Handball.Repositories;
-using Handball.Utilities.Messages;using System;
-
+using Handball.Utilities.Messages;
+using System;
 using System.Linq;
 
 
