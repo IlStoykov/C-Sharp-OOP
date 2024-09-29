@@ -21,11 +21,7 @@ namespace Handball.Core
             teams = new TeamRepository();
         }
         ITeam teamFound = null;
-        IPlayer playerFound = null;
-        public string LeagueStandings()
-        {
-            throw new NotImplementedException();
-        }
+        IPlayer playerFound = null;      
 
         public string NewContract(string playerName, string teamName)
         {
@@ -99,7 +95,6 @@ namespace Handball.Core
             players.AddModel(playerFound);
             return string.Format(OutputMessages.PlayerAddedSuccessfully, name);
         }
-
         public string NewTeam(string name)
         {
             teamFound = teams.GetModel(name);
@@ -111,8 +106,7 @@ namespace Handball.Core
                 teamFound = new Team(name);
                 teams.AddModel(teamFound);
                 return string.Format(OutputMessages.TeamSuccessfullyAdded, name, teams.GetType().Name);
-            }
-            
+            }            
         }
 
         public string PlayerStatistics(string teamName)
@@ -127,5 +121,23 @@ namespace Handball.Core
             }
             return result.ToString().TrimEnd();
         }
+        public string LeagueStandings()
+        {
+            List<ITeam> teamSelected = teams.Models.OrderByDescending(x => x.PointsEarned)
+                .OrderByDescending(x => x.OverallRating).ThenBy(x => x.Name).ToList();
+
+            StringBuilder result = new StringBuilder();
+            result.AppendLine("***League Standings***");
+            foreach (var team in teamSelected)
+            {
+                result.AppendLine($"Team: {team.Name} Points: {team.PointsEarned}");
+                result.AppendLine($"--Overall rating: {team.OverallRating}");
+
+                string players = team.Players.Any() ? string.Join(", ", team.Players.Select(x => x.Name)) : "none";
+
+                result.AppendLine($"--Players: {players}");
+            }
+            return result .ToString().TrimEnd();
+        }      
     }
 }
