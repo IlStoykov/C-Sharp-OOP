@@ -2,9 +2,11 @@ using Handball.Core.Contracts;
 using Handball.Models;
 using Handball.Models.Contracts;
 using Handball.Repositories;
-using Handball.Utilities.Messages;using System;
-
+using Handball.Utilities.Messages;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 
 namespace Handball.Core
@@ -112,9 +114,18 @@ namespace Handball.Core
             }
             
         }
+
         public string PlayerStatistics(string teamName)
         {
-            throw new NotImplementedException();
+            StringBuilder result = new StringBuilder();
+            ITeam teamFound = teams.GetModel(teamName);
+            List<IPlayer> orderdPlayers = teamFound.Players.OrderByDescending(p => p.Rating).ThenBy(x => x.Name).ToList();
+
+            result.AppendLine($"***{teamName}***");
+            foreach (var player in orderdPlayers) {
+                result.AppendLine($"{player.ToString()}");
+            }
+            return result.ToString().TrimEnd();
         }
     }
 }
