@@ -55,6 +55,8 @@ namespace Handball.Core
             ITeam winner = null;
             ITeam loser = null;
             if (firstTeam.OverallRating == secondTeam.OverallRating) {
+                firstTeam.Draw();
+                secondTeam.Draw();
                 return string.Format(OutputMessages.GameIsDraw, firstTeamName, secondTeamName);
             }
             if (firstTeam.OverallRating > secondTeam.OverallRating) { 
@@ -107,9 +109,9 @@ namespace Handball.Core
                 teamFound = new Team(name);
                 teams.AddModel(teamFound);
                 return string.Format(OutputMessages.TeamSuccessfullyAdded, name, teams.GetType().Name);
-            }            
+            }
+            
         }
-
         public string PlayerStatistics(string teamName)
         {
             throw new NotImplementedException();
