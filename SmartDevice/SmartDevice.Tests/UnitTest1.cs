@@ -1,8 +1,8 @@
 namespace SmartDevice.Tests
 {
-    using NUnit.Framework;
-    using System;
-    using System.Text;
+    using NUnit.Framework;    
+    using System.Collections.Generic;
+ 
 
     public class Tests
     {
@@ -12,9 +12,16 @@ namespace SmartDevice.Tests
         }
 
         [Test]
-        public void Test()
+        public void Test_DeviceConstructorWorkPropper() 
         {
-            Assert.Pass();
+            Device testDevice = new Device(500);
+            int expectResult = 500;
+            var propertyValue = testDevice.Applications;
+            
+            Assert.AreEqual(testDevice.AvailableMemory, expectResult);
+            Assert.AreEqual(testDevice.MemoryCapacity, expectResult);
+            Assert.IsTrue(testDevice.Photos == 0);
+            Assert.That(propertyValue, Is.InstanceOf<List<string>>());
         }
     }
 }
