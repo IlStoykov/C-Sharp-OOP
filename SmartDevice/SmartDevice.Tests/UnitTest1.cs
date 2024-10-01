@@ -70,7 +70,61 @@ namespace SmartDevice.Tests
             testDevice.InstallApp(appName, testAppSize);
 
             Assert.AreEqual(testDevice.AvailableMemory, expectedResult);
-        }     
+        }
+        [Test]
+        public void Test_InsttalApp_AddAppNameToApplications()
+        {
+            Device newTestDevice = new Device(devicMemory);
+            int testAppSize = devicMemory / 4;
+            string firstAppName = "FisrtApp";
+            string secondAppName = "SecondApp";
 
+            newTestDevice.InstallApp(firstAppName, testAppSize);
+            Assert.AreEqual(newTestDevice.Applications[0], firstAppName);
+            
+            newTestDevice.InstallApp(secondAppName, testAppSize);
+            Assert.AreEqual(newTestDevice.Applications[1], secondAppName);
+        }
+        [Test]
+        public void Test_FormatDevice_PhtotCountWorkProper() {
+            int expectedResult = 0;
+            int numOfPictures = 2;
+
+            int firstPhoto = 100;
+            int secondPhoto = 100;
+
+            testDevice.TakePhoto(firstPhoto);
+            testDevice.TakePhoto(secondPhoto);
+            Assert.AreEqual(testDevice.Photos, numOfPictures);
+
+            testDevice.FormatDevice();
+            Assert.AreEqual(testDevice.Photos, expectedResult);
+        }
+        [Test]
+        public void Test_FormatDevice_ApplicationListIsEmpty() {           
+            string firstAppName = "FisrtApp";
+            string secondAppName = "SecondApp";
+            int testAppSize = 100;
+            int expectedResult = testDevice.Applications.Count;
+
+            testDevice.InstallApp(firstAppName, testAppSize);
+            testDevice.InstallApp(secondAppName, testAppSize);
+
+            testDevice.FormatDevice();
+            Assert.IsTrue( expectedResult == 0);
+        }
+        [Test]
+        public void Test_FormatDevice_AvailableMemory() {
+            int firstPhoto = 100;
+            int secondPhoto = 100;
+            int firstExpectResult = devicMemory - firstPhoto - secondPhoto;
+
+            testDevice.TakePhoto(firstPhoto);
+            testDevice.TakePhoto(secondPhoto);
+            Assert.AreEqual(testDevice.AvailableMemory, firstExpectResult);
+
+            testDevice.FormatDevice();
+            Assert.AreEqual(testDevice.MemoryCapacity, devicMemory);            
+        }
     }
 }
