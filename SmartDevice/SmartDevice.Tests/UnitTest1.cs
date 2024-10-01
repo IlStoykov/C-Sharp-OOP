@@ -6,7 +6,9 @@ namespace SmartDevice.Tests
 
     public class Tests
     {
-        Device testDevice = new Device(500);
+        private static int devicMemory = 500;
+        Device testDevice = new Device(devicMemory);
+        
 
         [SetUp]
         public void Setup()
@@ -27,8 +29,8 @@ namespace SmartDevice.Tests
         }
         [Test]
         public void Test_DeviceTakePhotoMemorySetProper() {
-            int testResultGraeterMemory = 1000;
-            int testResultLowerMemory = 200;
+            int testResultGraeterMemory = devicMemory * 2;
+            int testResultLowerMemory = devicMemory / 2;
 
             Assert.IsFalse(testDevice.TakePhoto(testResultGraeterMemory));
             Assert.IsTrue(testDevice.TakePhoto(testResultLowerMemory));
@@ -47,8 +49,17 @@ namespace SmartDevice.Tests
             
             testDevice.TakePhoto(memoryUsage);
 
-            Assert.AreEqual(testDevice.AvailableMemory, expectResult);            
+            Assert.AreEqual(testDevice.AvailableMemory, expectResult); 
+        }
+        [Test]
+        public void Test_InstallApp_IfMemoryIsFull() {
+            int testAppSize = devicMemory + 1;
+            string appName = "testAppName";
+            string expectedResult = "Not enough available memory to install the app.";
 
+            var testResult = Assert.Throws<System.InvalidOperationException>(() => testDevice.InstallApp(appName, testAppSize));
+
+            Assert.That(testResult.Message, Is.EqualTo(expectedResult));
         }
     }
 }
