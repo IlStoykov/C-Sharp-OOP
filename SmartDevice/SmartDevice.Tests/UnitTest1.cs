@@ -2,7 +2,7 @@ namespace SmartDevice.Tests
 {
     using NUnit.Framework;    
     using System.Collections.Generic;
-
+    using System.Text;
 
     public class Tests
     {
@@ -125,6 +125,28 @@ namespace SmartDevice.Tests
 
             testDevice.FormatDevice();
             Assert.AreEqual(testDevice.MemoryCapacity, devicMemory);            
+        }
+        [Test]
+        public void Test_GetDeviceStatus() {
+            string firstAppName = "FisrtApp";
+            string secondAppName = "SecondApp";
+            int testAppSize = 100;
+            int testPhotoSize = 75;
+            
+            
+            testDevice.InstallApp(firstAppName, testAppSize);
+            testDevice.InstallApp(secondAppName, testAppSize);
+
+            testDevice.TakePhoto(testPhotoSize);
+
+            string testResult = testDevice.GetDeviceStatus();
+
+            StringBuilder expectedResult = new StringBuilder();
+            expectedResult.AppendLine($"Memory Capacity: {testDevice.MemoryCapacity} MB, Available Memory: {testDevice.AvailableMemory} MB");
+            expectedResult.AppendLine($"Photos Count: {testDevice.Photos}");
+            expectedResult.AppendLine($"Applications Installed: {string.Join(", ", testDevice.Applications)}");
+
+            Assert.That(testResult, Is.EqualTo(expectedResult.ToString().Trim()));
         }
     }
 }
