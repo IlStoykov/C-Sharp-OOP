@@ -2,26 +2,26 @@ namespace SmartDevice.Tests
 {
     using NUnit.Framework;    
     using System.Collections.Generic;
- 
+
 
     public class Tests
     {
         private static int devicMemory = 500;
         Device testDevice = new Device(devicMemory);
-        
+
 
         [SetUp]
         public void Setup()
-        {           
+        {
         }
 
         [Test]
-        public void Test_DeviceConstructorWorkPropper() 
+        public void Test_DeviceConstructorWorkPropper()
         {
-            
+
             int expectResult = 500;
             var propertyValue = testDevice.Applications;
-            
+
             Assert.AreEqual(testDevice.AvailableMemory, expectResult);
             Assert.AreEqual(testDevice.MemoryCapacity, expectResult);
             Assert.IsTrue(testDevice.Photos == 0);
@@ -46,10 +46,10 @@ namespace SmartDevice.Tests
         public void Test_DevicetakePhotosMemoryWorkProper() {
             int memoryUsage = 100;
             int expectResult = testDevice.MemoryCapacity - memoryUsage;
-            
+
             testDevice.TakePhoto(memoryUsage);
 
-            Assert.AreEqual(testDevice.AvailableMemory, expectResult); 
+            Assert.AreEqual(testDevice.AvailableMemory, expectResult);
         }
         [Test]
         public void Test_InstallApp_IfMemoryIsFull() {
@@ -61,5 +61,16 @@ namespace SmartDevice.Tests
 
             Assert.That(testResult.Message, Is.EqualTo(expectedResult));
         }
+        [Test]
+        public void Test_InstallApp_DecreaseAvailableMemoryProperly() {
+            int testAppSize = devicMemory / 2;
+            string appName = "testAppName";
+            int expectedResult = devicMemory - testAppSize;
+
+            testDevice.InstallApp(appName, testAppSize);
+
+            Assert.AreEqual(testDevice.AvailableMemory, expectedResult);
+        }     
+
     }
 }
