@@ -1,9 +1,8 @@
-﻿using BankLoan.Models.Contracts;
+using BankLoan.Models.Contracts;
 using BankLoan.Repositories.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 
 namespace BankLoan.Repositories
 {
@@ -11,7 +10,7 @@ namespace BankLoan.Repositories
     {
         List<IBank> banks;
        
-        BankRepository() { 
+        public BankRepository() { 
             banks = new List<IBank>();
         }
         public IReadOnlyCollection<IBank> Models => banks.AsReadOnly();
@@ -29,8 +28,10 @@ namespace BankLoan.Repositories
 
         public bool RemoveModel(IBank model)
         {
-            if (banks.Any(x => x.Name == model.Name)) { 
-                banks.Remove(model);
+            IBank bankToRemove = banks.FirstOrDefault(x => x.Name == model.Name);
+            if (bankToRemove != null)
+            {
+                banks.Remove(bankToRemove);
                 return true;
             }
             return false;
