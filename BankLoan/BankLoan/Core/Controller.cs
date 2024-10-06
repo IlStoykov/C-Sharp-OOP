@@ -1,144 +1,97 @@
-﻿using Handball.Core.Contracts;
-using Handball.Models;
-using Handball.Models.Contracts;
-using Handball.Repositories;
-using Handball.Utilities.Messages;
+using BankLoan.Core.Contracts;
+using BankLoan.Models;
+using BankLoan.Models.Contracts;
+using BankLoan.Repositories;
+using BankLoan.Utilities.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 
-namespace Handball.Core
+namespace BankLoan.Core
 {
     public class Controller : IController
     {
-        private PlayerRepository players;
-        private TeamRepository teams;
-        private string [] playerTypeCheck = new string[] { "Goalkeeper", "CenterBack", "ForwardWing"};
-        public Controller(){
-            players = new PlayerRepository();
-            teams = new TeamRepository();
-        }
-        ITeam teamFound = null;
-        IPlayer playerFound = null;      
-
-        public string NewContract(string playerName, string teamName)
-        {
-            teamFound = teams.GetModel(teamName);
-            playerFound = players.GetModel(playerName);
-
-            if (playerFound == null)
-            {
-                return string.Format(OutputMessages.PlayerNotExisting, playerName, players.GetType().Name);
-            }
-            else if (teamFound == null)
-            {
-                return string.Format(OutputMessages.TeamNotExisting, teamName, teams.GetType().Name);
-            }
-            else if (playerFound.Team != null)
-            {
-                return string.Format(OutputMessages.PlayerAlreadySignedContract, playerName, playerFound.Team);
-            }            
-                
-            playerFound.JoinTeam(teamName);
-            teamFound.SignContract(playerFound);
-            return string.Format(OutputMessages.SignContract, playerName, teamName);            
+        private LoanRepository loans;
+        private BankRepository banks;
+        private string[] bankTypes = new string[] { "BranchBank", "CentralBank" };
+        //private string[] loanTypes = new string[] { "StudentLoan", "MortgageLoan" };
+        private string[] clientsTypes = new string[] { "Student", "Adult" };
+        public Controller() { 
+            loans = new LoanRepository();
+            banks = new BankRepository();
         }
 
-        public string NewGame(string firstTeamName, string secondTeamName)
+        public string AddBank(string bankTypeName, string name)
         {
-            ITeam firstTeam = teams.GetModel(firstTeamName);
-            ITeam secondTeam = teams.GetModel(secondTeamName);
-            ITeam winner = null;
-            ITeam loser = null;
-            if (firstTeam.OverallRating == secondTeam.OverallRating) {
-                firstTeam.Draw();
-                secondTeam.Draw();
-                return string.Format(OutputMessages.GameIsDraw, firstTeamName, secondTeamName);
+            IBank newBank = null;
+            if (!bankTypes.Contains(bankTypeName)) {
+                throw new ArgumentException("Invalid bank type.");
             }
-            if (firstTeam.OverallRating > secondTeam.OverallRating) { 
-                winner = firstTeam;
-                loser = secondTeam;
+            if (bankTypeName == "BranchBank"){
+                newBank = new BranchBank(name);
             }
-            else
-            {
-                winner = secondTeam;
-                loser = firstTeam;
+            if (bankTypeName == "CentralBank") { 
+                newBank = new CentralBank(name);
             }
-            winner.Win();
-            loser.Lose();
-            return string.Format(OutputMessages.GameHasWinner, winner.Name, loser.Name);
+            banks.AddModel(newBank);
+            return string.Format(OutputMessages.BankSuccessfullyAdded, newBank.GetType().Name);
         }
 
-        public string NewPlayer(string typeName, string name)
+        public string AddClient(string bankName, string clientTypeName, string clientName, string id, double income)
         {
-            if (!playerTypeCheck.Contains(typeName)) {
-                return string.Format(OutputMessages.InvalidTypeOfPosition, typeName);
+            IBank bankFound = null;
+            IClient newClient = null;
+            if (!clientsTypes.Contains(clientTypeName)) {
+                throw new ArgumentException("Invalid client type.");
             }
-            playerFound = players.GetModel(name);
-            if (playerFound != null)
-            {
-                return string.Format(OutputMessages.PlayerIsAlreadyAdded, name, players.GetType().Name, typeName);
+            bankFound = banks.FirstModel(bankName);
+            if ((clientTypeName == "Student" && !(bankFound is BranchBank)) || (clientTypeName == "Adult" && !(bankFound is CentralBank))) {
+                return string.Format(OutputMessages.UnsuitableBank);
             }
-            if (typeName == "Goalkeeper")
-            {
-               playerFound = new Goalkeeper(name);
+            switch (clientTypeName) {
+                case "Student":
+                    newClient = new Student(clientName, id, income);
+                    break;
+
+                case "Adult":
+                    newClient = new Adult(clientName, id, income);
+                    break;
             }
-            if (typeName == "ForwardWing")
-            {
-                playerFound = new ForwardWing(name);
-            }
-            if (typeName == "CenterBack") { 
-                playerFound = new CenterBack(name);
-            }
-            players.AddModel(playerFound);
-            return string.Format(OutputMessages.PlayerAddedSuccessfully, name);
-        }
-        public string NewTeam(string name)
-        {
-            teamFound = teams.GetModel(name);
-            if (teamFound != null)
-            {
-                return string.Format(OutputMessages.TeamAlreadyExists, name, teams.GetType().Name);
-            }
-            else {
-                teamFound = new Team(name);
-                teams.AddModel(teamFound);
-                return string.Format(OutputMessages.TeamSuccessfullyAdded, name, teams.GetType().Name);
-            }            
+            bankFound.AddClient(newClient);
+            return string.Format(OutputMessages.ClientAddedSuccessfully, clientTypeName, bankFound.Name);
         }
 
-        public string PlayerStatistics(string teamName)
+        public string AddLoan(string loanTypeName)
         {
-            StringBuilder result = new StringBuilder();
-            ITeam teamFound = teams.GetModel(teamName);
-            List<IPlayer> orderdPlayers = teamFound.Players.OrderByDescending(p => p.Rating).ThenBy(x => x.Name).ToList();
-
-            result.AppendLine($"***{teamName}***");
-            foreach (var player in orderdPlayers) {
-                result.AppendLine($"{player.ToString()}");
-            }
-            return result.ToString().TrimEnd();
-        }
-        public string LeagueStandings()
-        {
-            List<ITeam> teamSelected = teams.Models.OrderByDescending(x => x.PointsEarned)
-                .OrderByDescending(x => x.OverallRating).ThenBy(x => x.Name).ToList();
-
-            StringBuilder result = new StringBuilder();
-            result.AppendLine("***League Standings***");
-            foreach (var team in teamSelected)
+            ILoan newLoan = null;
+            switch (loanTypeName)
             {
-                result.AppendLine($"Team: {team.Name} Points: {team.PointsEarned}");
-                result.AppendLine($"--Overall rating: {team.OverallRating}");
+                case "StudentLoan":
+                    newLoan = new StudentLoan();
+                    break;
+                case "MortgageLoan":
+                    newLoan = new MortgageLoan();
+                    break;
+                default: throw new ArgumentException("Invalid loan type.");
+            }   
+            loans.AddModel(newLoan);
+            return string.Format(OutputMessages.LoanSuccessfullyAdded, newLoan.GetType().Name);
+        }
+        
+        public string FinalCalculation(string bankName)
+        {
+            throw new NotImplementedException();
+        }
 
-                string players = team.Players.Any() ? string.Join(", ", team.Players.Select(x => x.Name)) : "none";
+        public string ReturnLoan(string bankName, string loanTypeName)
+        {
+            throw new NotImplementedException();
+        }
 
-                result.AppendLine($"--Players: {players}");
-            }
-            return result .ToString().TrimEnd();
-        }         
-
+        public string Statistics()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
