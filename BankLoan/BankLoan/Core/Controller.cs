@@ -78,7 +78,7 @@ namespace BankLoan.Core
             loans.AddModel(newLoan);
             return string.Format(OutputMessages.LoanSuccessfullyAdded, newLoan.GetType().Name);
         }
-        
+
         public string FinalCalculation(string bankName)
         {
             throw new NotImplementedException();
@@ -86,7 +86,15 @@ namespace BankLoan.Core
 
         public string ReturnLoan(string bankName, string loanTypeName)
         {
-            throw new NotImplementedException();
+            ILoan returnLoan = loans.FirstModel(loanTypeName);
+            IBank bankFound = banks.FirstModel(bankName);
+
+            if (returnLoan == null){
+                return $"Loan of type {loanTypeName} is missing.";
+            }
+            loans.RemoveModel(returnLoan);
+            bankFound.AddLoan(returnLoan);
+            return $"{loanTypeName} successfully added to {bankName}";
         }
 
         public string Statistics()
