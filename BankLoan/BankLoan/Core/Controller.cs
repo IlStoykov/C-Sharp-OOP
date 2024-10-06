@@ -81,7 +81,14 @@ namespace BankLoan.Core
 
         public string FinalCalculation(string bankName)
         {
-            throw new NotImplementedException();
+            
+            IBank bankFound = banks.FirstModel(bankName);
+            
+            double totalIncomeFromClients = bankFound.Clients.Sum(client => client.Income);          
+            double totalLoanAmount = bankFound.Loans.Sum(loan => loan.Amount);            
+            double totalFunds = totalIncomeFromClients + totalLoanAmount;
+
+            return $"The funds of bank {bankName} are {totalFunds:F2}.";
         }
 
         public string ReturnLoan(string bankName, string loanTypeName)
