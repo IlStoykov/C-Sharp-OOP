@@ -4,8 +4,8 @@ using BankLoan.Models.Contracts;
 using BankLoan.Repositories;
 using BankLoan.Utilities.Messages;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 
 namespace BankLoan.Core
@@ -80,8 +80,7 @@ namespace BankLoan.Core
         }
 
         public string FinalCalculation(string bankName)
-        {
-            
+        {            
             IBank bankFound = banks.FirstModel(bankName);
             
             double totalIncomeFromClients = bankFound.Clients.Sum(client => client.Income);          
@@ -103,10 +102,13 @@ namespace BankLoan.Core
             bankFound.AddLoan(returnLoan);
             return $"{loanTypeName} successfully added to {bankName}";
         }
-
         public string Statistics()
         {
-            throw new NotImplementedException();
+            StringBuilder result = new StringBuilder();
+            foreach (var bank in banks.Models) { 
+                result.AppendLine(bank.GetStatistics());
+            }
+            return result.ToString().Trim();
         }
     }
 }
