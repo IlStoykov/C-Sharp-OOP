@@ -9,7 +9,8 @@ namespace VendingRetail.Tests
         int testButtonsCount = 5;
         [SetUp]
         public void Setup()
-        {            
+        {
+            
         }
 
         [Test]
@@ -25,11 +26,17 @@ namespace VendingRetail.Tests
         [Test]
         public void Test_FillWaterTankIfFull() {
             string expectedResult = "Water tank is already full!";
-            
+            string expectedResultAddedAmountOfWater = $"Water tank is filled with {testWaterCapacity}ml";
+
             TestCoffeeMat = new CoffeeMat(testWaterCapacity, testButtonsCount);
+
+            string tankAddWaterMessage = TestCoffeeMat.FillWaterTank();
+            Assert.AreEqual(tankAddWaterMessage, expectedResultAddedAmountOfWater);
+
+            TestCoffeeMat.FillWaterTank();
             string tankFullMessage = TestCoffeeMat.FillWaterTank();
-            
-            Assert.AreEqual(tankFullMessage, expectedResult);
+            Assert.AreEqual(tankFullMessage, expectedResult);       
+
         }
     }
 }
