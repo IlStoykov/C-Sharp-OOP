@@ -77,6 +77,7 @@ namespace VendingRetail.Tests
         public void Test_ByDrinkPayDrinkWorkProper() {
             double expectedSumm = 2.5;
             TestCoffeeMat = new CoffeeMat(testWaterCapacity, testButtonsCount);
+            TestCoffeeMat.FillWaterTank();
             TestCoffeeMat.AddDrink("Espresso", 1.25);
 
             TestCoffeeMat.BuyDrink("Espresso");
