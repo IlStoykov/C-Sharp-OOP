@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System.Xml.Linq;
 
 namespace VendingRetail.Tests
 {
@@ -86,6 +87,70 @@ namespace VendingRetail.Tests
 
             Assert.AreEqual(testResult, expectedSumm);            
         }
+        [Test]
+        public void Test_ByDrinkInvalidName() {
+            string drinkType = "Cola";
+            TestCoffeeMat = new CoffeeMat(testWaterCapacity, testButtonsCount);
+            TestCoffeeMat.FillWaterTank();
+            TestCoffeeMat.AddDrink("Espresso", 1.25);
 
+            string expectedResult = $"{drinkType} is not available!";
+            string testResult = TestCoffeeMat.BuyDrink(drinkType);
+            
+            Assert.AreEqual(testResult, expectedResult);
+        }
+        [Test]
+        public void Test_ByDrinkCheckIfBillToPayWorkProper() {
+            double testSum = 1.25;
+            int orderCount = 2;
+            string expectedResult = $"Your bill is {testSum * orderCount:f2}$";
+
+            TestCoffeeMat = new CoffeeMat(testWaterCapacity, testButtonsCount);
+            TestCoffeeMat.FillWaterTank();
+            TestCoffeeMat.AddDrink("Espresso", testSum);
+
+            for (int i = 0; i < orderCount; i++) {
+                TestCoffeeMat.BuyDrink("Espresso");
+            }
+            string testResult = $"Your bill is {testSum * orderCount:f2}$";
+
+            Assert.AreEqual(testResult, expectedResult);
+        }
+        [Test]
+        public void Test_CollectIncome() {
+            double testSum = 1.25;
+            int orderCount = 2;
+            double expectedResult = testSum * orderCount;
+            
+            TestCoffeeMat = new CoffeeMat(testWaterCapacity, testButtonsCount);
+            TestCoffeeMat.FillWaterTank();
+            TestCoffeeMat.AddDrink("Espresso", testSum);
+
+            for (int i = 0; i < orderCount; i++){
+                TestCoffeeMat.BuyDrink("Espresso");
+            }
+            double testResult = TestCoffeeMat.CollectIncome();
+
+            Assert.AreEqual(testResult, expectedResult);
+        }
+        [Test]
+        public void Test_CollectIncomeIsZero() {
+            double testSum = 1.25;
+            int orderCount = 2;
+            double expectedResult = 0;
+
+            TestCoffeeMat = new CoffeeMat(testWaterCapacity, testButtonsCount);
+            TestCoffeeMat.FillWaterTank();
+            TestCoffeeMat.AddDrink("Espresso", testSum);
+
+            for (int i = 0; i < orderCount; i++)
+            {
+                TestCoffeeMat.BuyDrink("Espresso");
+            }
+            TestCoffeeMat.CollectIncome();
+            double testResult = TestCoffeeMat.CollectIncome();
+
+            Assert.AreEqual(testResult, expectedResult);
+        }
     }
 }
