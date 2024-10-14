@@ -1,4 +1,4 @@
-﻿using Store.Models.Contracts;
+using Store.Models.Contracts;
 
 
 namespace Store.Models
@@ -12,32 +12,29 @@ namespace Store.Models
         private string[] pencilColors = new string[] { "red", "blue", "black", "green", "yellow", "purple", "brown" };
         
 
-        public OfficeSupplies(string type, string manufacturer, bool isPackage, double price)
-        {            
-            Type = type;
+        public OfficeSupplies(string manufacturer, bool isPackage, double price)
+        {           
+            
             Manufacturer = manufacturer;
             IsPackage = isPackage;
             Price = price;
         }
         
-        private static Random randomIndex = new Random();
-        public string Type { get; private set; }
+        private static Random randomIndex = new Random();        
 
         public string Color {
             get => color;
             private set {
-                if (Type == "pen") { 
+                if (GetType().Name == "Pen") { 
                     int index = randomIndex.Next(penColors.Length);
                     color = penColors[index];
                 }
-                if (Type == "pencil") {
+                if (GetType().Name == "Pencil") {
                     int index = randomIndex.Next(pencilColors.Length);
                     color = pencilColors[index];
                 }
-                color = value;
             }
         }
-
         public string Manufacturer { get; private set; }
 
         public bool IsPackage { get; private set; }
