@@ -7,6 +7,7 @@ namespace Store.Models
 {
     public class Store<T> : IStore<T> where T : class, IOfficeSupplies
     {
+        private int orderCount = 0;
         private string storeType;
         private string[] storeTypes = new string[] { "BookStore", "OfficeStore" };
         private List<T> storeWarehouse;
@@ -36,39 +37,53 @@ namespace Store.Models
         public string Order(string kind)
         {
             IOfficeSupplies suppliceFound = storeWarehouse.FirstOrDefault(x => x.GetType().Name == kind);
-            switch (kind)
-            {
-                case "Pen":                    
-                    if (suppliceFound == null)
-                    {
-                        throw new ArgumentException(string.Format(ExceptionMessages.OutOfStock, kind));
-                    }
-                    break;
-                case "Pencil":                    
-                    if (suppliceFound == null)
-                    {
-                        throw new ArgumentException(string.Format(ExceptionMessages.OutOfStock, kind));
-                    }
-                    break;
-                case "NovelBook":                   
-                    if (suppliceFound == null)
-                    {
-                        throw new ArgumentException(string.Format(ExceptionMessages.OutOfStock, kind));
-                    }
-                    break;
-                case "CoockingBook":                    
-                    if (suppliceFound == null)
-                    {
-                        throw new ArgumentException(string.Format(ExceptionMessages.OutOfStock, kind));
-                    }
-                    break;
-            }
-            double profitAdding = profitTable[kind];
-            Profit += profitAdding;
-            Turnover += (profitAdding + suppliceFound.Price);
-            WareHouse.Remove((T)suppliceFound);
-            return $"A {suppliceFound.GetType().Name} was sold on a price of {(profitAdding + suppliceFound.Price)}";
+            CheckNullAndThrow(suppliceFound, kind);
 
+            //switch (kind)
+            //{
+            //    case "Pen":                    
+            //        if (suppliceFound == null)
+            //        {
+            //            throw new ArgumentException(string.Format(ExceptionMessages.OutOfStock, kind));
+            //        }
+            //        break;
+            //    case "Pencil":                    
+            //        if (suppliceFound == null)
+            //        {
+            //            throw new ArgumentException(string.Format(ExceptionMessages.OutOfStock, kind));
+            //        }
+            //        break;
+            //    case "NovelBook":                   
+            //        if (suppliceFound == null)
+            //        {
+            //            throw new ArgumentException(string.Format(ExceptionMessages.OutOfStock, kind));
+            //        }
+            //        break;
+            //    case "CoockingBook":                    
+            //        if (suppliceFound == null)
+            //        {
+            //            throw new ArgumentException(string.Format(ExceptionMessages.OutOfStock, kind));
+            //        }
+            //        break;
+            //}
+            double profitAdding = profitTable[kind];
+            double totalIncome = suppliceFound.Price + profitAdding;
+            
+            Profit += profitAdding;
+            Turnover += totalIncome;
+            WareHouse.Remove((T)suppliceFound);
+            orderCount ++;
+            return $"A {suppliceFound.GetType().Name} was sold on a price of {totalIncome}";
+        }
+        public void StockLoading() {
+
+            return;
+        }
+        private void CheckNullAndThrow(IOfficeSupplies suppliceFound, string kind) {
+            if (suppliceFound == null)
+            {
+                throw new ArgumentException(string.Format(ExceptionMessages.OutOfStock, kind));
+            }
         }
     }
     
