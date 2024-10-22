@@ -1,9 +1,8 @@
-﻿using Store.GeneralWarehouse.Contracts;
+using Store.GeneralWarehouse.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Store.GeneralWarehouse
 {
@@ -23,16 +22,18 @@ namespace Store.GeneralWarehouse
         public List<T> ProduceDelivery(string storeType, int number)
         {
             Type typeFound = Type.GetType(storeType);
+            
             if (typeFound == null){
                 throw new ArgumentException($"Type '{storeType}' not found.");
             }
+
             itemsFordeliver = items.Where(x=>x.GetType() == typeFound).ToList();
             return itemsFordeliver.Take(number).ToList();
         }
 
         public IReadOnlyCollection<T> Warehouse()
         {
-            throw new NotImplementedException();
+            return items.AsReadOnly();
         }
     }
 }
