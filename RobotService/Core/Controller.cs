@@ -1,144 +1,65 @@
-﻿using Handball.Core.Contracts;
-using Handball.Models;
-using Handball.Models.Contracts;
-using Handball.Repositories;
-using Handball.Utilities.Messages;
+using RobotService.Core.Contracts;
+using RobotService.Models;
+using RobotService.Models.Contracts;
+using RobotService.Repositories;
+using RobotService.Utilities.Messages;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-
-namespace Handball.Core
+namespace RobotService.Core
 {
     public class Controller : IController
     {
-        private PlayerRepository players;
-        private TeamRepository teams;
-        private string [] playerTypeCheck = new string[] { "Goalkeeper", "CenterBack", "ForwardWing"};
-        public Controller(){
-            players = new PlayerRepository();
-            teams = new TeamRepository();
+        private SupplementRepository supplements;
+        private RobotRepository robots;
+        private string[] robotsType = new[] { "DomesticAssistant", "IndustrialAssistant" }; 
+        public Controller() { 
+            supplements = new SupplementRepository();
+            robots = new RobotRepository();
         }
-        ITeam teamFound = null;
-        IPlayer playerFound = null;      
-
-        public string NewContract(string playerName, string teamName)
+        public string CreateRobot(string model, string typeName)
         {
-            teamFound = teams.GetModel(teamName);
-            playerFound = players.GetModel(playerName);
+            IRobot newRobot = null;
+            if (!robotsType.Contains(typeName)) { 
+                return string.Format(OutputMessages.RobotCannotBeCreated, typeName);
+            }
+            switch (typeName)
+            {
+                case "DomesticAssistant":
+                    newRobot = new DomesticAssistant(model);
+                    break;
 
-            if (playerFound == null)
-            {
-                return string.Format(OutputMessages.PlayerNotExisting, playerName, players.GetType().Name);
+                case "IndustrialAssistant":
+                    newRobot = new IndustrialAssistant (model);
+                    break;
             }
-            else if (teamFound == null)
-            {
-                return string.Format(OutputMessages.TeamNotExisting, teamName, teams.GetType().Name);
-            }
-            else if (playerFound.Team != null)
-            {
-                return string.Format(OutputMessages.PlayerAlreadySignedContract, playerName, playerFound.Team);
-            }            
-                
-            playerFound.JoinTeam(teamName);
-            teamFound.SignContract(playerFound);
-            return string.Format(OutputMessages.SignContract, playerName, teamName);            
+            robots.AddNew(newRobot);
+            return string.Format(OutputMessages.RobotCreatedSuccessfully, typeName, model);
         }
 
-        public string NewGame(string firstTeamName, string secondTeamName)
+        public string CreateSupplement(string typeName)
         {
-            ITeam firstTeam = teams.GetModel(firstTeamName);
-            ITeam secondTeam = teams.GetModel(secondTeamName);
-            ITeam winner = null;
-            ITeam loser = null;
-            if (firstTeam.OverallRating == secondTeam.OverallRating) {
-                firstTeam.Draw();
-                secondTeam.Draw();
-                return string.Format(OutputMessages.GameIsDraw, firstTeamName, secondTeamName);
-            }
-            if (firstTeam.OverallRating > secondTeam.OverallRating) { 
-                winner = firstTeam;
-                loser = secondTeam;
-            }
-            else
-            {
-                winner = secondTeam;
-                loser = firstTeam;
-            }
-            winner.Win();
-            loser.Lose();
-            return string.Format(OutputMessages.GameHasWinner, winner.Name, loser.Name);
+            throw new NotImplementedException();
         }
 
-        public string NewPlayer(string typeName, string name)
+        public string PerformService(string serviceName, int intefaceStandard, int totalPowerNeeded)
         {
-            if (!playerTypeCheck.Contains(typeName)) {
-                return string.Format(OutputMessages.InvalidTypeOfPosition, typeName);
-            }
-            playerFound = players.GetModel(name);
-            if (playerFound != null)
-            {
-                return string.Format(OutputMessages.PlayerIsAlreadyAdded, name, players.GetType().Name, typeName);
-            }
-            if (typeName == "Goalkeeper")
-            {
-               playerFound = new Goalkeeper(name);
-            }
-            if (typeName == "ForwardWing")
-            {
-                playerFound = new ForwardWing(name);
-            }
-            if (typeName == "CenterBack") { 
-                playerFound = new CenterBack(name);
-            }
-            players.AddModel(playerFound);
-            return string.Format(OutputMessages.PlayerAddedSuccessfully, name);
-        }
-        public string NewTeam(string name)
-        {
-            teamFound = teams.GetModel(name);
-            if (teamFound != null)
-            {
-                return string.Format(OutputMessages.TeamAlreadyExists, name, teams.GetType().Name);
-            }
-            else {
-                teamFound = new Team(name);
-                teams.AddModel(teamFound);
-                return string.Format(OutputMessages.TeamSuccessfullyAdded, name, teams.GetType().Name);
-            }            
+            throw new NotImplementedException();
         }
 
-        public string PlayerStatistics(string teamName)
+        public string Report()
         {
-            StringBuilder result = new StringBuilder();
-            ITeam teamFound = teams.GetModel(teamName);
-            List<IPlayer> orderdPlayers = teamFound.Players.OrderByDescending(p => p.Rating).ThenBy(x => x.Name).ToList();
-
-            result.AppendLine($"***{teamName}***");
-            foreach (var player in orderdPlayers) {
-                result.AppendLine($"{player.ToString()}");
-            }
-            return result.ToString().TrimEnd();
+            throw new NotImplementedException();
         }
-        public string LeagueStandings()
+
+        public string RobotRecovery(string model, int minutes)
         {
-            List<ITeam> teamSelected = teams.Models.OrderByDescending(x => x.PointsEarned)
-                .OrderByDescending(x => x.OverallRating).ThenBy(x => x.Name).ToList();
+            throw new NotImplementedException();
+        }
 
-            StringBuilder result = new StringBuilder();
-            result.AppendLine("***League Standings***");
-            foreach (var team in teamSelected)
-            {
-                result.AppendLine($"Team: {team.Name} Points: {team.PointsEarned}");
-                result.AppendLine($"--Overall rating: {team.OverallRating}");
-
-                string players = team.Players.Any() ? string.Join(", ", team.Players.Select(x => x.Name)) : "none";
-
-                result.AppendLine($"--Players: {players}");
-            }
-            return result .ToString().TrimEnd();
-        }         
-
+        public string UpgradeRobot(string model, string supplementTypeName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
