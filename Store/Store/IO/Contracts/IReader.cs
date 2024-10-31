@@ -2,7 +2,7 @@
 
 namespace Store.IO.Contracts
 {
-    internal interface IReader
+    public interface IReader
     {
         string ReadLine();
     }
