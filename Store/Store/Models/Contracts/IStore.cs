@@ -1,13 +1,13 @@
-
-namespace RobotService.Models.Contracts
+namespace Store.Models.Contracts
 {
-    public interface IStore
+    public interface IStore<T> where T : class
     {
         const int WhereHouseMaxLimit = 10;
         const int WhereHouseMinLimit = 3;       
 
         string StoreType { get; }
-        List<object> WareHouse { get; }  
+        string StoreName { get; }
+        List<T>WareHouse { get; } 
         double Turnover { get; }
         double Profit { get; }   
 
