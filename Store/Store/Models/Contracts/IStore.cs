@@ -7,7 +7,7 @@ namespace RobotService.Models.Contracts
         const int WhereHouseMinLimit = 3;       
 
         string StoreType { get; }
-         List<object> WareHouse { get; }  
+        List<object> WareHouse { get; }  
         double Turnover { get; }
         double Profit { get; }   
 
