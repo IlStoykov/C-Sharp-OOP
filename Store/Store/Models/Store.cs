@@ -9,8 +9,9 @@ using Store.GeneralWarehouse;
 namespace Store.Models
 {
     public abstract class Store<T> : IStore<T> where T : class
-    {        
-        private int orderCount = 0;        
+    {
+        const int WhereHouseMaxLimit = 10;
+        const int WhereHouseMinLimit = 3;
         private string storeName;        
         private List<T> storeWarehouse;
         private Dictionary<string, double> profitTable = 
@@ -56,8 +57,16 @@ namespace Store.Models
             Profit += profitAdding;
             Turnover += totalIncome;
             WareHouse.Remove((T)suppliceFound);
-            orderCount ++;
+            CheckWareHouseCapacity();
             return $"A {suppliceFound.GetType().Name} was sold on a price of {totalIncome}";
-        }                
-    }   
+        }
+        private void CheckWareHouseCapacity()
+        {
+            if (WareHouse.Count == WhereHouseMinLimit){
+                throw new ArgumentException(String.Format(ExceptionMessages.OutOfStock, storeName, GetType().Name));            
+            }
+        }
+
+    }
+
 }
