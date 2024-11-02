@@ -1,4 +1,4 @@
-﻿using Store.Models.Contracts;
+using Store.Models.Contracts;
 using Store.Utilities.Messages;
 using Store.Repositories;
 using System;
@@ -8,10 +8,9 @@ using Store.GeneralWarehouse;
 
 namespace Store.Models
 {
-    public abstract class Store<T> : IStore<T> where T : class, IOfficeSupplies
+    public abstract class Store<T> : IStore<T> where T : class
     {        
-        private int orderCount = 0;
-        private string storeType;
+        private int orderCount = 0;        
         private string storeName;        
         private List<T> storeWarehouse;
         private Dictionary<string, double> profitTable = 
@@ -19,7 +18,7 @@ namespace Store.Models
 
         public Store(string name)
         {            
-            this.storeName = name;
+            StoreName = name;
             storeWarehouse = new List<T>();
         }        
         public string StoreName{
@@ -39,26 +38,26 @@ namespace Store.Models
 
         public string Order(string kind)
         {
-            IOfficeSupplies suppliceFound = storeWarehouse.FirstOrDefault(x => x.GetType().Name == kind);
-            CheckNullAndThrow(suppliceFound, kind);
-            
+            double totalIncome = 0.0;
+            var suppliceFound = storeWarehouse.FirstOrDefault(x => x.GetType().Name == kind);            
+            if (suppliceFound == null)
+            {
+                throw new ArgumentException(string.Format(ExceptionMessages.OutOfStock, kind));
+            }
             double profitAdding = profitTable[kind];
-            double totalIncome = suppliceFound.Price + profitAdding;
+            
+            if (suppliceFound is IOfficeSupplies supplies) {
+                totalIncome = supplies.Price + profitAdding;
+            }
+            else if(suppliceFound is IBook book) {
+                totalIncome = book.Price + profitAdding;
+            }
             
             Profit += profitAdding;
             Turnover += totalIncome;
             WareHouse.Remove((T)suppliceFound);
             orderCount ++;
             return $"A {suppliceFound.GetType().Name} was sold on a price of {totalIncome}";
-        }        
-        
-        
-        private void CheckNullAndThrow(IOfficeSupplies suppliceFound, string kind) {
-            if (suppliceFound == null)
-            {
-                throw new ArgumentException(string.Format(ExceptionMessages.OutOfStock, kind));
-            }
-        }
-    }
-    
+        }                
+    }   
 }
