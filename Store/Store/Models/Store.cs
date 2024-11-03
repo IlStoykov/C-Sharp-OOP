@@ -63,7 +63,8 @@ namespace Store.Models
         private void CheckWareHouseCapacity()
         {
             if (WareHouse.Count == WhereHouseMinLimit){
-                throw new ArgumentException(String.Format(ExceptionMessages.OutOfStock, storeName, GetType().Name));            
+                int numOfGoodsForDelvery = WhereHouseMaxLimit - WareHouse.Count;
+                throw new ArgumentException(String.Format(ExceptionMessages.OutOfStock, storeName, GetType().Name, numOfGoodsForDelvery));            
             }
         }
 
