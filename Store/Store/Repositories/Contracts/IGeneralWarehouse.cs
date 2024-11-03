@@ -4,7 +4,7 @@
     {
         public IReadOnlyCollection<T> Warehouse();
         void Add(T item);
-        public List<T> ProduceDelivery(string storeType, int number);
+        public List<T> ProduceDelivery(string storeType, string storeName, int number);
 
     }
 }
