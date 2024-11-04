@@ -23,9 +23,9 @@ namespace Store.Models
         public abstract string StoreName { get; set; }
         public List<T> WareHouse => storeWarehouse;
 
-        public double Turnover { get; private set; }
+        public double Turnover { get; protected set; }
 
-        public double Profit { get; private set; }
+        public double Profit { get; protected set; }
 
         public abstract string Order(string item);
        
