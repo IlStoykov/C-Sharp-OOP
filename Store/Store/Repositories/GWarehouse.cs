@@ -4,6 +4,7 @@ using System;
 using Store.Utilities.Messages;
 using System.Collections.ObjectModel;
 
+
 namespace Store.Repositories
 {
     public class StoreRepository<TStore, T> : IStoreRepository<TStore, T> where TStore : IStore<T> where T : class
@@ -12,15 +13,13 @@ namespace Store.Repositories
         public StoreRepository() { 
             stores = new List<TStore>();
         }
-        public string Add(TStore store)
+        public void Add(TStore store)
         {
             var storeFound = stores.FirstOrDefault(x => x.StoreName == store.StoreName);
-            if (storeFound != null)
+            if (storeFound == null)
             {
-                return String.Format(OutputMessages.StoreExist, storeFound.StoreName);
-            }
-            stores.Add(store);
-            return String.Format(OutputMessages.StoreAdded, storeFound.StoreName);
+                stores.Add(store);
+            }           
         }
 
         public bool FindByName(string name)
