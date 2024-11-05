@@ -41,7 +41,7 @@ namespace Store.Models
                 Turnover += itemTotalPrice;
                 WareHouse.Remove(itemFound);
                 CheckWareHouseCapacity();
-                return $"A {itemFound} was sold on a price of {itemTotalPrice};";
+                return $"A {itemFound} was sold on a price of {itemTotalPrice}.";
 
             }
             else {
