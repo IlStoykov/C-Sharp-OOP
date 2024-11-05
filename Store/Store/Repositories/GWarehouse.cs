@@ -1,44 +1,33 @@
-using Store.GeneralWarehouse.Contracts;
+using Store.Repositories.Contracts;
+using Store.Models.Contracts;
+using System; 
 using Store.Utilities.Messages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.ObjectModel;
 
-
-namespace Store.GeneralWarehouse
+namespace Store.Repositories
 {
-    public class GWarehouse<T> : IGeneralWarehouse<T>
+    public class StoreRepository<TStore, T> : IStoreRepository<TStore, T> where TStore : IStore<T> where T : class
     {
-        private List<T> items;
-        private List<T> itemsFordeliver;
-        private List<T> result;
-        private string[] listStoreType = new string[]{"BookStore", "OfficeStore" };
-        public GWarehouse() { 
-            items = new List<T>();
-            itemsFordeliver = new List<T>();
-            result = new List<T>();
+        private List<TStore> stores;
+        public StoreRepository() { 
+            stores = new List<TStore>();
         }
-        public void Add(T item)
+        public string Add(TStore store)
         {
-            items.Add(item);
-        }
-
-        public List<T> ProduceDelivery(string storeType, string storeName, int number)
-        {            
-            
-            if (!listStoreType.Contains(storeType)){
-                throw new ArgumentException(ExceptionMessages.StoreType);
+            var storeFound = stores.FirstOrDefault(x => x.StoreName == store.StoreName);
+            if (storeFound != null)
+            {
+                return String.Format(OutputMessages.StoreExist, storeFound.StoreName);
             }
-
-            itemsFordeliver = items.Where(x => x.GetType().Name == storeType).ToList();
-            result = itemsFordeliver.Take(number).ToList();
-            items.RemoveAll(x=>result.Contains(x));
-            return result;
+            stores.Add(store);
+            return String.Format(OutputMessages.StoreAdded, storeFound.StoreName);
         }
 
-        public IReadOnlyCollection<T> Warehouse()
+        public bool FindByName(string name)
         {
-            return items.AsReadOnly();
+            return stores.Any(x => x.StoreName == name);
         }
+
+        public ReadOnlyCollection<TStore> Models => stores.AsReadOnly();        
     }
 }
