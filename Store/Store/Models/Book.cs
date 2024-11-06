@@ -1,4 +1,4 @@
-﻿using Store.Models.Contracts;
+using Store.Models.Contracts;
 using Store.Utilities.Messages;
 using System;
 
@@ -8,10 +8,11 @@ namespace Store.Models
     public abstract class Book : IBook
     {
         private double price;
-        public Book(string author, string title, double price) {
+        public Book(string author, string title, double price, int productNumber) {
             Author = author;
             Title = title;
-            Price = price;            
+            Price = price;
+            ProductNumber = productNumber;
         }
         public string Author { get; private set; }
 
@@ -25,6 +26,7 @@ namespace Store.Models
                 }
                 price = value;
             }
-        }        
+        }
+        public int ProductNumber { get; private set;}
     }
 }
