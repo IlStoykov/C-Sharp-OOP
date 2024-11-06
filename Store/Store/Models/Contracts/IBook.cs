@@ -5,6 +5,6 @@
         string Author { get; }
         string Title { get; }
         double Price { get; }
-     
+        int ProductNumber { get; }
     }
 }
