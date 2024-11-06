@@ -11,7 +11,7 @@ namespace Store.Models
     {
         private string[] pencilColors = new string[] { "red", "blue", "black", "green", "yellow", "purple", "brown" };
         Random randomIndex = new Random();
-        public Pencil(string manufacturer, bool isPackage, double price) : base(manufacturer, isPackage, price)
+        public Pencil(string manufacturer, bool isPackage, double price, int productNumber) : base(manufacturer, isPackage, price, productNumber)
         {
             Color = pencilColors[randomIndex.Next(pencilColors.Length)];
         }
