@@ -1,4 +1,4 @@
-﻿using Store.Models.Contracts;
+using Store.Models.Contracts;
 using Store.Utilities.Messages;
 using System;
 using System.Collections.Generic;
@@ -11,11 +11,13 @@ namespace Store.Models
     {        
         private double price;               
 
-        public OfficeSupplies(string manufacturer, bool isPackage, double price)
+        public OfficeSupplies(string manufacturer, bool isPackage, double price, int productNumber )
         {           
             Manufacturer = manufacturer;
             IsPackage = isPackage;
             Price = price;
+            ProductNumber = productNumber;
+            
         }            
 
         public abstract string Color { get; }
@@ -32,5 +34,6 @@ namespace Store.Models
                 price = value;
             }            
         }
+        public int ProductNumber { get; private set; }
     }
 }
