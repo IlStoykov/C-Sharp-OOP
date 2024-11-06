@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +8,7 @@ namespace Store.Models
 {
     public class CoockingBook : Book
     {        
-        public CoockingBook(string author, string title, double price) : base(author, title, price)
+        public CoockingBook(string author, string title, double price, int productNumber) : base(author, title, price, productNumber)
         {
         }
     }
