@@ -8,5 +8,6 @@ namespace Store.Models.Contracts
         string Manufacturer { get; }
         bool IsPackage { get; }
         double Price { get; }
+        int ProductNumber { get; }
     }
 }
