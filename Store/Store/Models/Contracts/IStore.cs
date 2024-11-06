@@ -1,16 +1,15 @@
 
 namespace Store.Models.Contracts
 {
-    public interface IStore<T> where T : class
-    {
-                       
-        string StoreName { get; set; }
-        List<T>WareHouse { get; } 
+    public interface IStore
+    {                       
+        string StoreName { get; set; }        
         double Turnover { get; }
-        double Profit { get; }   
-
+        double Profit { get; } 
         string Order(string item);
-        void CheckWareHouseCapacity();
-        
+        void CheckWareHouseCapacity();        
         }
+    public interface IStore<T> : IStore where T : class {
+        List<T> WareHouse { get; }
+    }
 }
