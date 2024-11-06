@@ -17,7 +17,7 @@ namespace Store.Models
         private Dictionary<string, double> profitTable = new Dictionary<string, double> { { "NovelBook", 4.55 }, { "CoockingBook", 6.85 } };
 
         public BookStore(string name): base(name) { 
-            
+            StoreName = name;
         }
         public override string StoreName { 
             get => storeName;
