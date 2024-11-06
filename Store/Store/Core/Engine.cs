@@ -1,7 +1,7 @@
-﻿using Store.Core.Contracts;
+using Store.Core.Contracts;
 using Store.IO;
 using Store.IO.Contracts;
-
+using System;
 
 namespace Store.Core
 {
@@ -27,14 +27,16 @@ namespace Store.Core
                     string result = string.Empty;
                     if (input[0] == "CreateStore") { 
                         string type = input[1];
-                        result = controller.CreateStore(type);
+                        string name = input[2];
+                        result = controller.CreateStore(type, name);
                     }
+                    writer.Write(result);
                 }
-                catch { 
-                
+                catch(Exception ex)
+                {
+                    writer.WriteLine(ex.Message);
                 }
-            }
-           
+            }           
         }
     }
 }
