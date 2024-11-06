@@ -11,7 +11,7 @@
         {            
             private string[] penColors = new string[] { "red", "blue", "black" };
             private static Random randomIndex = new Random();
-            public Pen(string manufacturer, bool isPackage, double price) : base(manufacturer, isPackage, price)
+           public Pen(string manufacturer, bool isPackage, double price, int productNumber) : base(manufacturer, isPackage, price, productNumber)
             {
             Color = penColors[randomIndex.Next(penColors.Length)];
             }
