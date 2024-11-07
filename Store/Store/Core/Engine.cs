@@ -25,18 +25,29 @@ namespace Store.Core
                 }
                 try { 
                     string result = string.Empty;
-                    if (input[0] == "CreateStore") { 
+                    if (input[0] == "CreateStore")
+                    {
                         string type = input[1];
                         string name = input[2];
                         result = controller.CreateStore(type, name);
                     }
+                    else if (input[0] == "CreateProduct") { 
+                        string productType = input[1];
+                        string origin = input[2];
+                        string titleCount = input[3];
+                        double price = double.Parse(input[4]);
+                        int productNumber = int.Parse(input[5]);
+                        result = controller.CreateProduct(productType, origin, titleCount, price, productNumber);
+                    }
+
                     writer.Write(result);
                 }
                 catch(Exception ex)
                 {
                     writer.WriteLine(ex.Message);
                 }
-            }           
+            }
+           
         }
     }
 }
