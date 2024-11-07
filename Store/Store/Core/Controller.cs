@@ -5,14 +5,18 @@ using Store.Models.Contracts;
 using Store.Utilities.Messages;
 
 
+
 namespace Store.Core
 {
     public class Controller : IController
     {        
-        private GWarehouse<IStore> generalWarehouse;
+        private GWarehouse<object> generalWarehouse;
+        private int counter = 0;
         private string[] possibleStoreTypes = new string[] { "BookStore", "OfficeStore" };
+        private string[] officeProducts = new string[] { "Pen", "Pencil" };
+        private string[] books = new string[] { "NovelBook", "CoockingBook" };
         public Controller() {
-            generalWarehouse = new GWarehouse<IStore>();            
+            generalWarehouse = new GWarehouse<object>();            
         }
         public string CreateStore(string storeType, string storeName)
         {
@@ -29,6 +33,30 @@ namespace Store.Core
             generalWarehouse.Add(newStore);
             return String.Format(OutputMessages.StoreAdded, storeName);
             
+        }
+        public string CreateProduct(string productType, string origin, string titleCount, double price, int productNumber)
+        {
+            object newProduct = null;
+            if (officeProducts.Contains(productType)){
+                counter++;
+                if (productType == "Pen") {                    
+                    newProduct = new Pen(origin, titleCount, price, counter);
+                }
+                else{
+                    newProduct = new Pencil(origin, titleCount, price, counter);
+                }
+            }
+            else {
+                counter++;
+                if (productType == "NovelBook")
+                {
+                    newProduct = new NovelBook(origin, titleCount, price, counter);
+                }
+                else {
+                    newProduct = new CoockingBook(origin, titleCount, price, counter);
+                }
+            }
+            generalWarehouse.Add(newProduct);
         }
     }
 }
