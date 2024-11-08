@@ -16,7 +16,7 @@ namespace Store.Repositories
             throw new NotImplementedException();
         }
 
-        public void FindByName(string name)
+        IStore FindByName(string name)
         {
             throw new NotImplementedException();
         }
