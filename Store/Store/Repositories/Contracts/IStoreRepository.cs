@@ -8,6 +8,6 @@ namespace Store.Repositories.Contracts
     {
         ReadOnlyCollection<TStore> Models { get; }
         void Add(TStore store);
-        bool FindByName(string name);
+        T FindByName(string name);
     }
 }
