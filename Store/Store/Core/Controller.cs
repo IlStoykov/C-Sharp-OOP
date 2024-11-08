@@ -57,6 +57,7 @@ namespace Store.Core
                 }
             }
             generalWarehouse.Add(newProduct);
+            return String.Format(OutputMessages.ItemAdde, newProduct.GetType().Name, price, counter) + Environment.NewLine;
         }
     }
 }
