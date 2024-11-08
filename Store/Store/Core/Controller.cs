@@ -2,6 +2,7 @@ using Store.Core.Contracts;
 using Store.GeneralWarehouse;
 using Store.Models;
 using Store.Models.Contracts;
+using Store.Repositories;
 using Store.Utilities.Messages;
 
 
@@ -11,12 +12,14 @@ namespace Store.Core
     public class Controller : IController
     {        
         private GWarehouse<object> generalWarehouse;
+        private StoreRepository<IStore> storeRepository;
         private int counter = 0;
         private string[] possibleStoreTypes = new string[] { "BookStore", "OfficeStore" };
         private string[] officeProducts = new string[] { "Pen", "Pencil" };
         private string[] books = new string[] { "NovelBook", "CoockingBook" };
         public Controller() {
-            generalWarehouse = new GWarehouse<object>();            
+            generalWarehouse = new GWarehouse<object>();
+            storeRepository = new StoreRepository<IStore>();            
         }
         public string CreateStore(string storeType, string storeName)
         {
@@ -30,7 +33,7 @@ namespace Store.Core
             else if (storeType == "OfficeStore") {
                 newStore = new OfficeStore<OfficeSupplies>(storeName);
             }
-            generalWarehouse.Add(newStore);
+            storeRepository.Add(newStore);
             return String.Format(OutputMessages.StoreAdded, storeName);
             
         }
