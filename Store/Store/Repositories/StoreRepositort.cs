@@ -9,7 +9,7 @@ using RobotService.Models.Contracts;
 
 namespace Store.Repositories
 {
-    public class StoreRepository<TStore, T> : IStoreRepository<TStore, T> where TStore : IStore<T> where T : class
+    public class StoreRepository<TStore> where TStore : IStore
     {
         public void Add(TStore store)
         {
