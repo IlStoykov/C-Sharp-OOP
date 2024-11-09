@@ -2,7 +2,9 @@
 namespace Store.Models.Contracts
 {
     public interface IStore
-    {                       
+    {
+        int wareHouseMaxLimit { get; }
+        int wareHouseMinLimit { get; }
         string StoreName { get; set; }        
         double Turnover { get; }
         double Profit { get; } 
