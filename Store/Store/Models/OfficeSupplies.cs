@@ -4,29 +4,29 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+
 namespace Store.Models
 {
-    public abstract class OfficeSupplies : IOfficeSupplies
+    public abstract class OfficeSupplies : IProduct
     {        
         private double price;
-        private string checkPackage;
-
-        public OfficeSupplies(string manufacturer, string package, double price, int productNumber )
-        {           
-            Manufacturer = manufacturer;            
+        
+        public OfficeSupplies(string manufacturer, string isPackage, double price, int productNumber )
+        {
+            Origin = manufacturer;            
             Price = price;
             ProductNumber = productNumber;
-            checkPackage = package;            
+            TitleIspackage = isPackage;
         }            
 
         public abstract string Color { get; }
-        public string Manufacturer { get; private set; }
+        public string Origin { get; private set; }
+        public string TitleIspackage { get; private set; }
 
-       
         public double Price { 
             get => price;
             private set{
-                if (checkPackage == "yes") {
+                if (TitleIspackage == "yes") {
                     price = value * 10; 
                 }
                 price = value;
