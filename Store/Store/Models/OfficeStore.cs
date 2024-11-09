@@ -1,4 +1,4 @@
-﻿using Store.Utilities.Messages;
+using Store.Utilities.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,17 +8,13 @@ using System.Threading.Tasks;
 
 namespace Store.Models
 {
-    public class OfficeStore<T> : Store<OfficeSupplies>
-    {      
-        public override int WhereHouseMinLimit => 2;
-        public override int WhereHouseMaxLimit => 8;
-
-
+    public class OfficeStore<T> : Store<OfficeSupplies> {      
+       
         private string storeName;
         private Dictionary<string, double> profitTable =
             new Dictionary<string, double>() { { "Pen", 1.05 }, { "Pencil", 2.45 } };
         public OfficeStore(string name): base(name) { 
-            StoreName = name;
+            StoreName = name;        
         }
         public override string StoreName { 
             get => storeName;
@@ -26,9 +22,11 @@ namespace Store.Models
                 if (string.IsNullOrWhiteSpace(value)) {
                     throw new ArgumentNullException(ExceptionMessages.StoreName);
                 }
+                storeName = value;
             }  
-         }
-
+        }
+        public override int WareHouseMaxLimit => 7;
+        public override int WareHouseMinLimit => 3;
         public override string Order(string item)
         {
             var itemFound = WareHouse.FirstOrDefault(x => x.GetType().Name == item);
