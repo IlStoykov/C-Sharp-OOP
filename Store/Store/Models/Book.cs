@@ -2,21 +2,20 @@ using Store.Models.Contracts;
 using Store.Utilities.Messages;
 using System;
 
-
 namespace Store.Models
 {
-    public abstract class Book : IBook
+    public abstract class Book : IProduct
     {
         private double price;
         public Book(string author, string title, double price, int productNumber) {
-            Author = author;
-            Title = title;
+            Origin = author;
+            TitleIspackage = title;
             Price = price;
             ProductNumber = productNumber;
         }
-        public string Author { get; private set; }
+        public string Origin { get; private set; }
 
-        public string Title { get; private set; }
+        public string TitleIspackage { get; private set; }
 
         public double Price {
             get => price;
