@@ -1,18 +1,12 @@
-﻿using Store.Models.Contracts;
+using Store.Models.Contracts;
 using Store.Utilities.Messages;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Store.Models
 {
     public class BookStore<T> : Store<Book>
     {
-        public override int WhereHouseMinLimit => 2;
-        public override int WhereHouseMaxLimit => 8;
-
         private string storeName;
         private Dictionary<string, double> profitTable = new Dictionary<string, double> { { "NovelBook", 4.55 }, { "CoockingBook", 6.85 } };
 
@@ -29,6 +23,8 @@ namespace Store.Models
                 storeName = value;
             }
         }
+        public override int WareHouseMaxLimit => 8;
+        public override int WareHouseMinLimit => 3;
 
         public override string Order(string item)
         {
