@@ -1,32 +1,39 @@
-using Store.Repositories.Contracts;
+using Store.GeneralWarehouse.Contracts;
 using Store.Models.Contracts;
-using System; 
 using Store.Utilities.Messages;
-using System.Collections.ObjectModel;
 
-
-namespace Store.Repositories
+namespace Store.GeneralWarehouse
 {
-    public class StoreRepository<TStore, T> : IStoreRepository<TStore, T> where TStore : IStore<T> where T : class
+    public class GWarehouse<T> : IGeneralWarehouse<T> where T : IProduct
     {
-        private List<TStore> stores;
-        public StoreRepository() { 
-            stores = new List<TStore>();
+        private List<T> items;
+        private List<T> itemsFordeliver;
+        private List<T> result;
+        private string[] listStoreType = new string[]{"BookStore", "OfficeStore" };
+        public GWarehouse() { 
+            items = new List<T>();
+            itemsFordeliver = new List<T>();
+            result = new List<T>();
         }
-        public void Add(TStore store)
+        public void Add(T item)
         {
-            var storeFound = stores.FirstOrDefault(x => x.StoreName == store.StoreName);
-            if (storeFound == null)
-            {
-                stores.Add(store);
-            }           
+            items.Add(item);
         }
 
-        public bool FindByName(string name)
-        {
-            return stores.Any(x => x.StoreName == name);
-        }
+        public List<T> ProduceDelivery(string storeType, int number)
+        {            
+            
+            if (!listStoreType.Contains(storeType)){
+                throw new ArgumentException(ExceptionMessages.StoreType);
+            }
 
-        public ReadOnlyCollection<TStore> Models => stores.AsReadOnly();        
+            itemsFordeliver = items.Where(x => x.GetType().Name == storeType).Take(number).ToList();            
+            items.RemoveAll(x=> itemsFordeliver.Contains(x));
+            return itemsFordeliver;
+        }
+        public IReadOnlyCollection<T> Warehouse()
+        {
+            return items.AsReadOnly();
+        }
     }
 }
