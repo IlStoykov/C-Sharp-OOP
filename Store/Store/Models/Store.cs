@@ -1,39 +1,39 @@
+using Store.GeneralWarehouse.Contracts;
 using Store.Models.Contracts;
 using Store.Utilities.Messages;
-using Store.Repositories;
 
-
-namespace Store.Models
+namespace Store.GeneralWarehouse
 {
-    public abstract class Store<T> : IStore<T> where T : class
+    public class GWarehouse<T> : IGeneralWarehouse<T> where T : IProduct
     {
-        
-        private List<T> storeWarehouse;        
-
-        public Store(string name)
-        {                        
-            storeWarehouse = new List<T>();
+        private List<T> items;
+        private List<T> itemsFordeliver;
+        private List<T> result;
+        private string[] listStoreType = new string[]{"BookStore", "OfficeStore" };
+        public GWarehouse() { 
+            items = new List<T>();
+            itemsFordeliver = new List<T>();
+            result = new List<T>();
         }
-        public abstract int WareHouseMaxLimit { get; }
-        public abstract int WareHouseMinLimit { get; }
-        public abstract string StoreName { get; set; }
-        public List<T> WareHouse => storeWarehouse;
-
-        public double Turnover { get; protected set; }
-
-        public double Profit { get; protected set; }
-
-        public abstract string Order(string item);
-       
-        public void CheckWareHouseCapacity()
+        public void Add(T item)
         {
-            if (WareHouse.Count == WareHouseMinLimit)
-            {
-                int numOfGoodsForDelvery = WareHouseMaxLimit - WareHouse.Count;
-                throw new ArgumentException(String.Format(ExceptionMessages.OutOfStock, StoreName, GetType().Name, numOfGoodsForDelvery));            
-            }
+            items.Add(item);
         }
 
-    }
+        public List<T> ProduceDelivery(string storeType, int number)
+        {            
+            
+            if (!listStoreType.Contains(storeType)){
+                throw new ArgumentException(ExceptionMessages.StoreType);
+            }
 
+            itemsFordeliver = items.Where(x => x.GetType().Name == storeType).Take(number).ToList();            
+            items.RemoveAll(x=> itemsFordeliver.Contains(x));
+            return itemsFordeliver;
+        }
+        public IReadOnlyCollection<T> Warehouse()
+        {
+            return items.AsReadOnly();
+        }
+    }
 }
