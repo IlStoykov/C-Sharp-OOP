@@ -5,21 +5,22 @@ using Store.Models.Contracts;
 using Store.Repositories;
 using Store.Utilities.Messages;
 
-
-
 namespace Store.Core
 {
     public class Controller : IController
     {        
-        private GWarehouse<object> generalWarehouse;
+        private GWarehouse<IProduct> generalWarehouse;
         private StoreRepository<IStore> storeRepository;
         private int counter = 0;
         private string[] possibleStoreTypes = new string[] { "BookStore", "OfficeStore" };
         private string[] officeProducts = new string[] { "Pen", "Pencil" };
         private string[] books = new string[] { "NovelBook", "CoockingBook" };
+        private List<string> storeFirstDeliveryList = new List<string>();
+
         public Controller() {
-            generalWarehouse = new GWarehouse<object>();
-            storeRepository = new StoreRepository<IStore>();            
+            generalWarehouse = new GWarehouse<IProduct>();
+            storeRepository = new StoreRepository<IStore>();
+            
         }
         public string CreateStore(string storeType, string storeName)
         {
@@ -39,7 +40,7 @@ namespace Store.Core
         }
         public string CreateProduct(string productType, string origin, string titleCount, double price, int productNumber)
         {
-            object newProduct = null;
+            IProduct newProduct = null;
             if (officeProducts.Contains(productType)){
                 counter++;
                 if (productType == "Pen") {                    
@@ -61,6 +62,24 @@ namespace Store.Core
             }
             generalWarehouse.Add(newProduct);
             return String.Format(OutputMessages.ItemAdde, newProduct.GetType().Name, price, counter) + Environment.NewLine;
+        }
+        public string Delivery(string storeName) {
+            int deliveryItem = 0;
+            IStore storeFound = storeRepository.FindByName(storeName);
+            if (storeFound == null) {
+                return String.Format(OutputMessages.NoSuchStore, storeName);
+            }
+            else if (!storeFirstDeliveryList.Contains(storeName))
+            {
+                deliveryItem = storeFound.WareHouseMaxLimit;
+            }
+
+            else {
+                deliveryItem = storeFound.WareHouseMaxLimit - storeFound.CheckWareHouseCapacity();
+            }
+            List<IProduct> deliveryObjects = new List<IProduct>();
+            deliveryObjects = generalWarehouse.ProduceDelivery(storeFound.GetType().Name, deliveryItem);
+            return String.Format(OutputMessages.StoreDelvery, storeFound.GetType().Name, storeFound.StoreName, deliveryItem);
         }
     }
 }
