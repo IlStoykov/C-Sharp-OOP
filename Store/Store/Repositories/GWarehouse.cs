@@ -10,6 +10,7 @@ namespace Store.GeneralWarehouse
         private List<T> itemsFordeliver;
         private List<T> result;
         private string[] listStoreType = new string[]{"BookStore", "OfficeStore" };
+        
         public GWarehouse() { 
             items = new List<T>();
             itemsFordeliver = new List<T>();
@@ -19,15 +20,18 @@ namespace Store.GeneralWarehouse
         {
             items.Add(item);
         }
-
         public List<T> ProduceDelivery(string storeType, int number)
         {            
             
             if (!listStoreType.Contains(storeType)){
                 throw new ArgumentException(ExceptionMessages.StoreType);
             }
-
-            itemsFordeliver = items.Where(x => x.GetType().Name == storeType).Take(number).ToList();            
+            if (storeType == "OfficeStore") {
+                itemsFordeliver = items.Where(x => x.GetType().Name == "Pen" || x.GetType().Name == "Pencil").Take(number).ToList();
+            }
+            else if (storeType == "BookStore") {
+                itemsFordeliver = items.Where(x => x.GetType().Name == "NovelBook" || x.GetType().Name == "CoockingBook").Take(number).ToList();
+            }                       
             items.RemoveAll(x=> itemsFordeliver.Contains(x));
             return itemsFordeliver;
         }
