@@ -16,6 +16,7 @@ namespace Store.Core
         private string[] officeProducts = new string[] { "Pen", "Pencil" };
         private string[] books = new string[] { "NovelBook", "CoockingBook" };
         private List<string> storeFirstDeliveryList = new List<string>();
+        IStore storeFound = null;
 
         public Controller() {
             generalWarehouse = new GWarehouse<IProduct>();
@@ -65,7 +66,7 @@ namespace Store.Core
         }
         public string Delivery(string storeName) {
             int deliveryItem = 0;
-            IStore storeFound = storeRepository.FindByName(storeName);
+            storeFound = storeRepository.FindByName(storeName);
             if (storeFound == null) {
                 return String.Format(OutputMessages.NoSuchStore, storeName);
             }
@@ -78,8 +79,9 @@ namespace Store.Core
                 deliveryItem = storeFound.WareHouseMaxLimit - storeFound.CheckWareHouseCapacity();
             }
             List<IProduct> deliveryObjects = new List<IProduct>();
-            deliveryObjects = generalWarehouse.ProduceDelivery(storeFound.GetType().Name, deliveryItem);
-            return String.Format(OutputMessages.StoreDelvery, storeFound.GetType().Name, storeFound.StoreName, deliveryItem);
+            string storeType = storeFound.GetType().IsGenericType ? storeFound.GetType().GetGenericTypeDefinition().Name.Split('`')[0] : storeFound.GetType().Name;
+            deliveryObjects = generalWarehouse.ProduceDelivery(storeType, deliveryItem);            
+            return String.Format(OutputMessages.StoreDelivery, storeType, storeFound.StoreName, deliveryItem);
         }
     }
 }
