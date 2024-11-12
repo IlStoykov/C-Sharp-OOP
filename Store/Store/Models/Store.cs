@@ -1,39 +1,49 @@
-using Store.GeneralWarehouse.Contracts;
 using Store.Models.Contracts;
 using Store.Utilities.Messages;
+using Store.Repositories;
+using System.Text;
 
-namespace Store.GeneralWarehouse
+
+namespace Store.Models
 {
-    public class GWarehouse<T> : IGeneralWarehouse<T> where T : IProduct
+    public abstract class Store<T> : IStore<T> where T : class, IProduct
     {
-        private List<T> items;
-        private List<T> itemsFordeliver;
-        private List<T> result;
-        private string[] listStoreType = new string[]{"BookStore", "OfficeStore" };
-        public GWarehouse() { 
-            items = new List<T>();
-            itemsFordeliver = new List<T>();
-            result = new List<T>();
-        }
-        public void Add(T item)
-        {
-            items.Add(item);
-        }
+        
+        private List<T> storeWarehouse;        
 
-        public List<T> ProduceDelivery(string storeType, int number)
-        {            
-            
-            if (!listStoreType.Contains(storeType)){
-                throw new ArgumentException(ExceptionMessages.StoreType);
+        public Store(string name)
+        {                        
+            storeWarehouse = new List<T>();
+        }
+        public abstract int WareHouseMaxLimit { get; }
+        public abstract int WareHouseMinLimit { get; }
+        public abstract string StoreName { get; set; }
+        public List<T> WareHouse => storeWarehouse;
+
+        public double Turnover { get; protected set; }
+
+        public double Profit { get; protected set; }
+
+        public abstract string Order(string item);
+       
+        public int CheckWareHouseCapacity()
+        {
+            int numOfGoodsForDelvery = 0;
+            if (WareHouse.Count == WareHouseMinLimit)
+            {
+                numOfGoodsForDelvery = WareHouseMaxLimit - WareHouse.Count;
+                throw new ArgumentException(String.Format(ExceptionMessages.OutOfStock, StoreName, GetType().Name, numOfGoodsForDelvery));            
             }
-
-            itemsFordeliver = items.Where(x => x.GetType().Name == storeType).Take(number).ToList();            
-            items.RemoveAll(x=> itemsFordeliver.Contains(x));
-            return itemsFordeliver;
+            return numOfGoodsForDelvery;
         }
-        public IReadOnlyCollection<T> Warehouse()
-        {
-            return items.AsReadOnly();
+        public void AcceptDelivery(List<Object> deliveryItems) {
+            foreach (var item in deliveryItems) {
+                if (item is T validItem && WareHouse.Count < WareHouseMaxLimit) { 
+                    WareHouse.Add(validItem);
+                }
+            }
         }
+        public abstract string GetInventory();      
     }
+
 }
