@@ -1,8 +1,4 @@
 using Store.Utilities.Messages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -45,6 +41,16 @@ namespace Store.Models
             else {
                 return $"{item} is out of stock";
             }
+        }
+        public override string GetInventory()
+        {
+            StringBuilder result = new StringBuilder();
+            result.AppendLine($"Store name {StoreName} invetori contain {WareHouse.Count()}:");
+            foreach (var item in WareHouse)
+            {
+                result.AppendLine($"Item type {item.GetType().Name}, producer {item.Origin}");
+            }
+            return result.ToString().TrimEnd();
         }
     }
 }
