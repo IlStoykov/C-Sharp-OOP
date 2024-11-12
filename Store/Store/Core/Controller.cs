@@ -80,7 +80,8 @@ namespace Store.Core
             }
             List<IProduct> deliveryObjects = new List<IProduct>();
             string storeType = storeFound.GetType().IsGenericType ? storeFound.GetType().GetGenericTypeDefinition().Name.Split('`')[0] : storeFound.GetType().Name;
-            deliveryObjects = generalWarehouse.ProduceDelivery(storeType, deliveryItem);            
+            deliveryObjects = generalWarehouse.ProduceDelivery(storeType, deliveryItem);
+            storeFound.AcceptDelivery(deliveryObjects.Cast<object>().ToList());
             return String.Format(OutputMessages.StoreDelivery, storeType, storeFound.StoreName, deliveryItem);
         }
     }
