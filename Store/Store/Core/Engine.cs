@@ -40,9 +40,14 @@ namespace Store.Core
                         const int productNumber = 0;
                         result = controller.CreateProduct(productType, origin, titleCount, price, productNumber);
                     }
-                    else if (input[0] == "Delivery") { 
+                    else if (input[0] == "Delivery")
+                    {
                         string storeName = input[1];
-                        result = controller.Delivery(storeName);                        
+                        result = controller.Delivery(storeName);
+                    }
+                    else if (input[0] == "GetInventory") { 
+                        string storeName = input[1];
+                        result = controller.GetInventory(storeName);
                     }
 
                     writer.Write(result);
@@ -51,8 +56,7 @@ namespace Store.Core
                 {
                     writer.WriteLine(ex.Message);
                 }
-            }
-           
+            }           
         }
     }
 }
