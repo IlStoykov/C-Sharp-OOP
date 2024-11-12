@@ -84,5 +84,14 @@ namespace Store.Core
             storeFound.AcceptDelivery(deliveryObjects.Cast<object>().ToList());
             return String.Format(OutputMessages.StoreDelivery, storeType, storeFound.StoreName, deliveryItem);
         }
+        public string GetInventory(string storeName)
+        {
+            storeFound = storeRepository.FindByName(storeName);
+            if (storeFound == null)
+            {
+                return String.Format(OutputMessages.NoSuchStore, storeName);
+            }
+            return storeFound.GetInventory();
+        }
     }
 }
