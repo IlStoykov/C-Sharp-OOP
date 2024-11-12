@@ -1,6 +1,7 @@
 using Store.Models.Contracts;
 using Store.Utilities.Messages;
 using System;
+using System.Text;
 
 
 namespace Store.Models
@@ -28,7 +29,7 @@ namespace Store.Models
 
         public override string Order(string item)
         {
-            IBook itemFound = WareHouse.FirstOrDefault(x => x.GetType().Name == item);
+            IProduct itemFound = WareHouse.FirstOrDefault(x => x.GetType().Name == item);
             if (itemFound != null)
             {
                 double itemProfit = profitTable[item];
@@ -42,6 +43,15 @@ namespace Store.Models
             else {
                 return $"{item} is out of stock";
             }
+        }
+        public override string GetInventory()
+        {
+            StringBuilder result = new StringBuilder();
+            result.AppendLine($"Store name {StoreName} invetori contain {WareHouse.Count()}:");
+            foreach (var item in WareHouse) {
+                result.AppendLine($"Author {item.Origin}, title {item.TitleIspackage}");
+            }
+            return result.ToString().TrimEnd();
         }
     }
 }
