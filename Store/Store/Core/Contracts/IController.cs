@@ -4,5 +4,7 @@ namespace Store.Core.Contracts
     {
         string CreateStore(string storeType, string storeName);
         string CreateProduct(string productType, string origin, string titleCount, double price, int productNumber);
+        string Delivery(string storeName);
+        string GetInventory(string storename);
     }
 }
