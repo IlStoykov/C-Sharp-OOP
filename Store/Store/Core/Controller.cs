@@ -93,5 +93,14 @@ namespace Store.Core
             }
             return storeFound.GetInventory();
         }
+        public string OrderOfficeSupply(string storeName, string item, string color) {
+            IStore storeFound = storeRepository.FindByName(storeName); 
+            if (storeFound == null) {
+                return String.Format(OutputMessages.NoSuchStore, storeName);
+            }
+            storeFound.Order(item, color);
+            //var itemFound = storeFound
+            return String.Format(OutputMessages.OrderOfficeSupply, storeName, item);
+        }
     }
 }
