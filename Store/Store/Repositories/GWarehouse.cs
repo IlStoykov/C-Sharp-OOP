@@ -20,6 +20,10 @@ namespace Store.GeneralWarehouse
         {
             items.Add(item);
         }
+        public int Count() => items.Count;
+        
+        public void Remove(T item) => items.Remove(item);      
+
         public List<T> ProduceDelivery(string storeType, int number)
         {            
             
