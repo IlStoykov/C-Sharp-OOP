@@ -45,9 +45,18 @@ namespace Store.Core
                         string storeName = input[1];
                         result = controller.Delivery(storeName);
                     }
-                    else if (input[0] == "GetInventory") { 
+                    else if (input[0] == "GetInventory")
+                    {
                         string storeName = input[1];
                         result = controller.GetInventory(storeName);
+                    }
+                    else if (input[0] == "Order") {
+                        if (input[2] == "Pen" || input[1] == "Pencil") {
+                            result = controller.OrderOfficeSupply(input[1], input[2], input[3]);
+                        }
+                        else{
+                            //result = controller.OrderBook(input[1], input[2], input[3]);
+                        }
                     }
 
                     writer.Write(result);
@@ -56,7 +65,8 @@ namespace Store.Core
                 {
                     writer.WriteLine(ex.Message);
                 }
-            }           
+            }
+           
         }
     }
 }
