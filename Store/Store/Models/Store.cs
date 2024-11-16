@@ -9,7 +9,7 @@ namespace Store.Models
     public abstract class Store<T> : IStore<T> where T : class, IProduct
     {
         
-        private List<T> storeWarehouse;        
+        protected List<T> storeWarehouse;        
 
         public Store(string name)
         {                        
