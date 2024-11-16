@@ -23,9 +23,9 @@ namespace Store.Models
         }
         public override int WareHouseMaxLimit => 7;
         public override int WareHouseMinLimit => 3;
-        public override string Order(string item)
+        public override string Order(string item, string color)
         {
-            var itemFound = WareHouse.FirstOrDefault(x => x.GetType().Name == item);
+            var itemFound = WareHouse.FirstOrDefault(x => x.GetType().Name == item && x.Color == color);
             if (itemFound != null)
             {
                 double itemProfit = profitTable[item];
@@ -33,13 +33,13 @@ namespace Store.Models
 
                 Profit += itemProfit;
                 Turnover += itemTotalPrice;
-                WareHouse.Remove(itemFound);
+                storeWarehouse.Remove(itemFound);    
                 CheckWareHouseCapacity();
                 return $"A {itemFound} was sold on a price of {itemTotalPrice}.";
 
             }
             else {
-                return $"{item} is out of stock";
+                return $"{item} with {color} is out of stock";
             }
         }
         public override string GetInventory()
@@ -47,7 +47,7 @@ namespace Store.Models
             StringBuilder result = new StringBuilder();
             result.AppendLine($"Store name {StoreName} invetori contain {WareHouse.Count()}:");
             foreach (var item in WareHouse)
-            {
+            {                
                 result.AppendLine($"Item type {item.GetType().Name}, producer {item.Origin}");
             }
             return result.ToString().TrimEnd();
