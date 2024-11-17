@@ -7,5 +7,6 @@ namespace Store.Core.Contracts
         string Delivery(string storeName);
         string GetInventory(string storename);
         string OrderOfficeSupply(string storeName, string item, string color);
+        string OrderBook(string storeName, string author, string title);
     }
 }
