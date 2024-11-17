@@ -98,9 +98,15 @@ namespace Store.Core
             if (storeFound == null) {
                 return String.Format(OutputMessages.NoSuchStore, storeName);
             }
-            storeFound.Order(item, color);
-            //var itemFound = storeFound
-            return String.Format(OutputMessages.OrderOfficeSupply, storeName, item);
+            return storeFound.Order(item, color);            
+            
+        }
+        public string OrderBook(string storeName, string author, string title) {
+            IStore storeFound = storeRepository.FindByName(storeName);
+            if (storeFound == null){
+                return String.Format(OutputMessages.NoSuchStore, storeName);
+            }
+            return storeFound.Order(author, title);
         }
     }
 }
