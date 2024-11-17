@@ -1,3 +1,4 @@
+using Store.Models.Contracts;
 using Store.Utilities.Messages;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,11 +36,11 @@ namespace Store.Models
                 Turnover += itemTotalPrice;
                 storeWarehouse.Remove(itemFound);    
                 CheckWareHouseCapacity();
-                return $"A {itemFound} was sold on a price of {itemTotalPrice}.";
+                return $"A {itemFound.GetType().Name} with color {itemFound.Color} was sold on a price of {itemTotalPrice:f2}." + Environment.NewLine;
 
             }
             else {
-                return $"{item} with {color} is out of stock";
+                return $"{item} with {color} is out of stock" + Environment.NewLine;
             }
         }
         public override string GetInventory()
@@ -52,5 +53,6 @@ namespace Store.Models
             }
             return result.ToString().TrimEnd();
         }
+        
     }
 }
