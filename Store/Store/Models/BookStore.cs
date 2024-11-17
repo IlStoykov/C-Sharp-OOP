@@ -27,21 +27,22 @@ namespace Store.Models
         public override int WareHouseMaxLimit => 8;
         public override int WareHouseMinLimit => 3;
 
-        public override string Order(string item)
+        public override string Order(string author, string title)
         {
-            IProduct itemFound = WareHouse.FirstOrDefault(x => x.GetType().Name == item);
+            var itemFound = WareHouse.FirstOrDefault(x => x.Origin == author && x.TitleIspackage == title);
             if (itemFound != null)
             {
-                double itemProfit = profitTable[item];
+                double itemProfit = profitTable[itemFound.GetType().Name];
                 double itemTotalPrice = itemFound.Price + itemProfit;
 
                 Profit += itemProfit;
                 Turnover += itemTotalPrice;
+                storeWarehouse.Remove(itemFound);
                 CheckWareHouseCapacity();
-                return $"A {itemFound} was sold on a price of {itemTotalPrice}.";
+                return $"A book named {title}, author {author} was sold on a price of {itemTotalPrice:f2}." + Environment.NewLine;
             }
             else {
-                return $"{item} is out of stock";
+                return $"{itemFound} is out of stock" + Environment.NewLine;
             }
         }
         public override string GetInventory()
