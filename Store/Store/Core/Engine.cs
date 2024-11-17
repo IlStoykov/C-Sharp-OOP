@@ -55,7 +55,7 @@ namespace Store.Core
                             result = controller.OrderOfficeSupply(input[1], input[2], input[3]);
                         }
                         else{
-                            //result = controller.OrderBook(input[1], input[2], input[3]);
+                            result = controller.OrderBook(input[1], input[2], input[3]);
                         }
                     }
 
@@ -63,10 +63,19 @@ namespace Store.Core
                 }
                 catch(Exception ex)
                 {
-                    writer.WriteLine(ex.Message);
+                    if (ex.Message.Contains("items for delivety"))
+                    {
+                        string[] messageTokens = ex.Message.Split(' ');
+                        string storeName = messageTokens[2].Trim(',');
+                        controller.Delivery(storeName);
+
+                    }
+                    else {
+                        writer.WriteLine(ex.Message);
+                    }
+                    
                 }
-            }
-           
+            }           
         }
     }
 }
