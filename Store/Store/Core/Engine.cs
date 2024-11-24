@@ -8,8 +8,7 @@ namespace Store.Core
     {
         private IReader reader;
         private IWriter writer;
-        private IController controller;
-        
+        private IController controller;        
 
         public Engine() {
             reader = new Reader();
@@ -84,8 +83,7 @@ namespace Store.Core
                     }
                     
                 }
-            }
-           
+            }           
         }
     }
 }
