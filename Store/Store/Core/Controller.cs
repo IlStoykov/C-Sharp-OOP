@@ -21,9 +21,9 @@ namespace Store.Core
 
         public Controller() {
             generalWarehouse = new GWarehouse<IProduct>();
-            storeRepository = new StoreRepository<IStore>();
-            
+            storeRepository = new StoreRepository<IStore>();            
         }
+        
         public string CreateStore(string storeType, string storeName)
         {
             IStore newStore = null;
@@ -37,9 +37,9 @@ namespace Store.Core
                 newStore = new OfficeStore<OfficeSupplies>(storeName);
             }
             storeRepository.Add(newStore);
-            return String.Format(OutputMessages.StoreAdded, storeName);
-            
+            return String.Format(OutputMessages.StoreAdded, storeName);            
         }
+        
         public string CreateProduct(string productType, string origin, string titleCount, double price, int productNumber)
         {
             IProduct newProduct = null;
@@ -65,6 +65,7 @@ namespace Store.Core
             generalWarehouse.Add(newProduct);
             return String.Format(OutputMessages.ItemAdde, newProduct.GetType().Name, price, counter) + Environment.NewLine;
         }
+        
         public string Delivery(string storeName) {
             int deliveryItem = 0;
             storeFound = storeRepository.FindByName(storeName);
@@ -87,6 +88,7 @@ namespace Store.Core
             
             return String.Format(OutputMessages.StoreDelivery, storeType, storeFound.StoreName, deliveryItem);
         }
+        
         public string TempDelivery(string storeName, int itemNum) 
         {                  
             storeFound = storeRepository.FindByName(storeName);
@@ -95,6 +97,7 @@ namespace Store.Core
             storeFound.AcceptDelivery(deliveryObjects.Cast<object>().ToList());
             return String.Format(OutputMessages.StoreDelivery, storeType, storeFound.StoreName, itemNum);
         }
+        
         public string GetInventory(string storeName)
         {
             storeFound = storeRepository.FindByName(storeName);
@@ -104,14 +107,15 @@ namespace Store.Core
             }
             return storeFound.GetInventory();
         }
+        
         public string OrderOfficeSupply(string storeName, string item, string color) {
             IStore storeFound = storeRepository.FindByName(storeName); 
             if (storeFound == null) {
                 return String.Format(OutputMessages.NoSuchStore, storeName);
             }
-            return storeFound.Order(item, color);            
-            
+            return storeFound.Order(item, color);         
         }
+        
         public string OrderBook(string storeName, string author, string title) {
             IStore storeFound = storeRepository.FindByName(storeName);
             if (storeFound == null){
@@ -119,6 +123,7 @@ namespace Store.Core
             }
             return storeFound.Order(author, title);
         }
+        
         public string Report(string storeName) {
             IStore storeFound = storeRepository.FindByName(storeName);
             if (storeFound == null)
